@@ -1,0 +1,5 @@
+,target_id,target_name,outcome_id,outcome_name,episodic,chronic
+1,1751,[PIONEER_Triptorelin] mPC treated Triptorelin,1688,Cardiovascular events,1,0
+2,1751,[PIONEER_Triptorelin] mPC treated Triptorelin,1689,Thromboembolism,1,0
+3,1751,[PIONEER_Triptorelin] mPC treated Triptorelin,1690,Diabetes,0,1
+4,1751,[PIONEER_Triptorelin] mPC treated Triptorelin,1691,Fractures,1,0

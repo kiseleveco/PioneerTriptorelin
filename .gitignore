@@ -1,0 +1,25 @@
+# R session artefacts
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj.user
+
+# macOS
+.DS_Store
+
+# renv — library is not committed; lockfile IS committed
+renv/library/
+renv/staging/
+renv/sandbox/
+
+# Study output (results stay at the site; never committed)
+output/
+
+# Error reports generated at runtime
+errorReportSql.txt
+errorReport.txt
+
+# Credentials (never commit)
+credentials.r
+credentials.R
+*.credentials
