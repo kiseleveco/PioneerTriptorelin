@@ -15,65 +15,43 @@ source("../credentials.r")
 # 1. Site-specific parameters  (edit these for every site)
 # ------------------------------------------------------------------------------
 
+JDBC <- "/home/a_kiselev/Jdbc"
 connectionDetails <- DatabaseConnector::createConnectionDetails(
   dbms        = DBMS,
   user        = USER,
   password    = PASSWORD,
   server      = SERVER,
-  port        = DB_PORT
+  port        = DB_PORT,
+  pathToDriver = JDBC
 )
 
 ## -- Schema names -------------------------------------------------------------
-cdmDatabaseSchema        <- "lungcancer_synth10k"# read-only CDM
+cdmDatabaseSchema        <- "marketscan_ccaemdcr_aug2025"# read-only CDM
 vocabularyDatabaseSchema <- cdmDatabaseSchema     # usually same as CDM
-cohortDatabaseSchema     <- "study_results"        # write-enabled; needs read/write/delete
-cohortTable              <- "cohort"
+cohortDatabaseSchema     <- "marketscan_ccaemdcr_aug2025_results"        # write-enabled; needs read/write/delete
+cohortTable              <- "cohort2"
 
 ## -- Temp table emulation (Oracle / some Spark configs) -----------------------
 options(sqlRenderTempEmulationSchema = NULL)
 
 ## -- Cohort IDs ---------------------------------------------------------------
-triptorelinCohortId <- 1686   # cohort definition ID of the main triptorelin cohort
+triptorelinCohortId <- 1751   # cohort definition ID of the main triptorelin cohort
 
 # Combination treatment cohorts for utilisation analysis (fill in once finalised in Atlas)
 # IDs only — cohort names are resolved automatically from CohortsToCreate.csv
 combinationTreatmentCohortIds <- c(
-  1699,   # ADT only
-  NA,     # ADT + ARPI (abiraterone / enzalutamide / apalutamide / darolutamide)
-  NA,     # ADT + docetaxel
-  NA      # ADT + docetaxel + ARPI
+  1755,   # Triptorelin only
+  1752,     # Triptorelin + ARPI
+  1753,     # Triptorelin + Chemo
+  1754      # Triple
 )
 
 # Adverse event cohorts for incidence rate analysis (fill in once finalised in Atlas)
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
-aeCohortIds <- c(
-  1702,   # ACE (acute cardiovascular events)
-  1703    # Fractures
-)
-
-# Outcome cohort IDs for safety analysis (fill in once cohorts are finalised in Atlas)
-outcomeCohortIds <- c(
-  mace      = 1702,   # MACE (composite)
-  mi        = NA,   # myocardial infarction
-  stroke    = NA,   # stroke
-  af        = NA,   # atrial fibrillation
-  vte       = NA,   # venous thromboembolism
-  diabetes  = NA,   # diabetes mellitus
-  fractures = 1703    # fractures
-)
+outcomeCohortIds <- c(1688, 1689, 1690, 1691)
+aeCohortIds <- c(NA)
 
 minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
-
-# CV comparison cohorts (CohortMethod step — fill in once cohorts are finalised in Atlas)
-withCvCohortId    <- NA   # triptorelin patients WITH prior CV history
-withoutCvCohortId <- NA   # triptorelin patients WITHOUT prior CV history
-
-cvOutcomeCohortIds <- c(
-  mace   = NA,   # MACE (composite)
-  mi     = NA,   # myocardial infarction
-  stroke = NA,   # stroke
-  af     = NA    # atrial fibrillation
-)
 
 ## -- Dataset metadata ---------------------------------------------------------
 # All results are stratified by dataset; never pooled across sites.
@@ -82,7 +60,7 @@ databaseName        <- "MarketScan aug2025"
 databaseDescription <- "MarketScan aug2025"
 
 ## -- Output -------------------------------------------------------------------
-outputFolder <- file.path("/home/a_kiselev/output", databaseId)
+outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin"))
 options(andromedaTempFolder = file.path(outputFolder, "andromedaTemp"))
 maxCores <- parallel::detectCores()
 
@@ -90,10 +68,10 @@ maxCores <- parallel::detectCores()
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
 incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
-includeCohortStats         <- FALSE  # TRUE = export inclusion rule statistics to cohortStatistics/
-runCreateCohorts           <- FALSE
-runBaselineCharacteristics <- FALSE
-runUtilisationAnalysis     <- FALSE   # primary: depot formulation + regimen mix
+includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
+runCreateCohorts           <- TRUE
+runBaselineCharacteristics <- TRUE
+runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
 runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
 runSwitchingAnalysis       <- FALSE   # KM for switching to alternative ADT

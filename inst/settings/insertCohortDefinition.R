@@ -1,11 +1,11 @@
 library(ROhdsiWebApi)
 base.url <- "https://pioneer.hzdr.de/WebAPI"
-token <- "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRyZWkua2lzZWxldkBiZG1jb25zdWx0aW5nLmZyIiwiU2Vzc2lvbi1JRCI6bnVsbCwiZXhwIjoxNzc5ODU0MjI2fQ.Ql6nome9Qcf1raya21kdPt3UwkoTW1onuz57NXDCpwt8MP6HFhtUpE2adGB1jhlzCWdv_wxuikPQi4RQCQWf3w"
+token <- "Bearer "
 
 ROhdsiWebApi::setAuthHeader(base.url, token)
 ROhdsiWebApi::insertCohortDefinitionSetInPackage(fileName = "inst/settings/CohortsToCreate.csv",
                                                  baseUrl = base.url,
-                                                 packageName = "demoPackage")
+                                                 packageName = "PioneerTriptorelin")
 
 cohort_json <- getCohortDefinition(cohortId = 262, baseUrl = base.url)
 
