@@ -66,7 +66,7 @@
     ))
   }
 
-  ci <- survival::cipoisson(k = nEvents, pt = personYears)
+  ci <- survival::cipoisson(nEvents) / personYears
 
   data.frame(
     targetId               = targetId,
