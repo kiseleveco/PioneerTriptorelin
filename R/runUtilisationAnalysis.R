@@ -123,7 +123,7 @@
 #'   for combination treatment cohorts (sub-analysis 3). \code{NA} entries are
 #'   silently skipped. Cohort names are resolved from
 #'   \code{inst/settings/CohortsToCreate.csv}.
-#' @param aeCohortIds                 Integer vector of cohort definition IDs for
+#' @param outcomeCohortIds            Integer vector of cohort definition IDs for
 #'   adverse event outcome cohorts (sub-analysis 4). \code{NA} entries are
 #'   silently skipped. Cohort names are resolved from
 #'   \code{inst/settings/CohortsToCreate.csv}; episodic/chronic classification
@@ -142,7 +142,7 @@ runUtilisationAnalysis <- function(connectionDetails,
                                    cohortTable,
                                    targetCohortId,
                                    combinationTreatmentCohortIds,
-                                   aeCohortIds,
+                                   outcomeCohortIds,
                                    databaseId,
                                    minCellCount = 5,
                                    outputFolder) {
@@ -333,11 +333,11 @@ runUtilisationAnalysis <- function(connectionDetails,
   # --------------------------------------------------------------------------
   ParallelLogger::logInfo("Utilisation step 4: adverse event incidence rates")
 
-  validAeIds <- aeCohortIds[!is.na(aeCohortIds)]
+  validOutcomeIds <- outcomeCohortIds[!is.na(outcomeCohortIds)]
 
-  if (length(validAeIds) == 0) {
+  if (length(validOutcomeIds) == 0) {
     ParallelLogger::logWarn(
-      "aeCohortIds contains only NA values — skipping incidence rate analysis."
+      "outcomeCohortIds contains only NA values — skipping incidence rate analysis."
     )
   } else {
     irSettings <- readr::read_csv(
@@ -349,7 +349,7 @@ runUtilisationAnalysis <- function(connectionDetails,
     on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
     dbms <- attr(connection, "dbms")
 
-    irRows <- lapply(validAeIds, function(outcomeId) {
+    irRows <- lapply(validOutcomeIds, function(outcomeId) {
       outcomeName <- .cohortName(outcomeId)
 
       # Look up episodic/chronic from IRsettings.csv; default to episodic

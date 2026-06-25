@@ -23,10 +23,6 @@
 #'   combination treatment cohorts (ADT alone, ADT + ARPI, ADT + chemotherapy, etc.),
 #'   passed to \code{runUtilisationAnalysis}. \code{NA} entries are silently skipped.
 #'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
-#' @param aeCohortIds                 Integer vector of cohort definition IDs for adverse
-#'   event outcome cohorts, passed to \code{runUtilisationAnalysis} for incidence rate
-#'   calculation. \code{NA} entries are silently skipped. Episodic/chronic classification
-#'   is resolved from \code{inst/settings/IRsettings.csv}.
 #' @param runBaselineCharacteristics Logical. Extract baseline covariates via FeatureExtraction.
 #' @param runUtilisationAnalysis     Logical. Describe depot formulation, combination regimen
 #'   use, and adverse event incidence rates.
@@ -61,7 +57,6 @@ execute <- function(connectionDetails,
                     includeCohortStats              = FALSE,
                     triptorelinCohortId,
                     combinationTreatmentCohortIds,
-                    aeCohortIds,
                     outcomeCohortIds,
                     minCellCount                 = 5,
                     withCvCohortId,
@@ -180,7 +175,7 @@ execute <- function(connectionDetails,
       cohortTable                    = cohortTable,
       targetCohortId                 = triptorelinCohortId,
       combinationTreatmentCohortIds  = combinationTreatmentCohortIds,
-      aeCohortIds                    = aeCohortIds,
+      outcomeCohortIds               = outcomeCohortIds,
       databaseId                     = databaseId,
       minCellCount                   = minCellCount,
       outputFolder                   = outputFolder

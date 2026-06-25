@@ -32,9 +32,9 @@
 #' @param cohortDatabaseSchema    Schema where cohort tables are written.
 #' @param cohortTable             Name of the cohort table.
 #' @param triptorelinCohortId     Cohort definition ID of the main triptorelin cohort.
-#' @param outcomeCohortIds        Named integer vector of outcome cohort IDs.
-#'   Expected names: \code{mace}, \code{mi}, \code{stroke}, \code{af},
-#'   \code{vte}, \code{diabetes}, \code{fractures}.
+#' @param outcomeCohortIds        Integer vector of outcome cohort IDs.
+#'   \code{NA} entries are silently skipped. Outcome names are resolved from
+#'   \code{inst/settings/CohortsToCreate.csv}.
 #' @param databaseId              Short site identifier used to label outputs.
 #' @param minCellCount            Minimum number of events required to report a
 #'   KM time point. Rows below this threshold are suppressed.
@@ -56,6 +56,16 @@ runSafetyAnalysis <- function(connectionDetails,
     dir.create(safetyFolder, recursive = TRUE)
   }
 
+  # Resolve cohort names from CohortsToCreate.csv (IDs are the single source of truth)
+  cohortsToCreate <- readr::read_csv(
+    system.file("settings", "CohortsToCreate.csv", package = "PioneerTriptorelin"),
+    col_types = readr::cols()
+  )
+  .cohortName <- function(id) {
+    nm <- cohortsToCreate$cohort_name[cohortsToCreate$cohortId == id]
+    if (length(nm) == 0 || is.na(nm[1])) as.character(id) else nm[1]
+  }
+
   connection <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection))
 
@@ -63,14 +73,16 @@ runSafetyAnalysis <- function(connectionDetails,
   allKmTables <- list()
   allKm3Year  <- list()
 
-  for (outcomeName in names(outcomeCohortIds)) {
+  for (i in seq_along(outcomeCohortIds)) {
 
-    outcomeCohortId <- outcomeCohortIds[[outcomeName]]
+    outcomeCohortId <- outcomeCohortIds[[i]]
 
     if (is.na(outcomeCohortId)) {
-      ParallelLogger::logWarn("Skipping outcome '", outcomeName, "': cohort ID is NA.")
+      ParallelLogger::logWarn("Skipping outcome at index ", i, ": cohort ID is NA.")
       next
     }
+
+    outcomeName <- .cohortName(outcomeCohortId)
 
     ParallelLogger::logInfo("Safety analysis: ", outcomeName, " (cohort ", outcomeCohortId, ")")
 

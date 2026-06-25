@@ -49,7 +49,6 @@ combinationTreatmentCohortIds <- c(
 # Adverse event cohorts for incidence rate analysis (fill in once finalised in Atlas)
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
 outcomeCohortIds <- c(1688, 1689, 1690, 1691)
-aeCohortIds <- c(NA)
 
 minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
 
@@ -94,7 +93,6 @@ execute(
   includeCohortStats           = includeCohortStats,
   triptorelinCohortId              = triptorelinCohortId,
   combinationTreatmentCohortIds    = combinationTreatmentCohortIds,
-  aeCohortIds                      = aeCohortIds,
   outcomeCohortIds                 = outcomeCohortIds,
   minCellCount                 = minCellCount,
   runCreateCohorts             = runCreateCohorts,
