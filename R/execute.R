@@ -17,8 +17,8 @@
 #'   exported to \code{outputFolder/cohortStatistics/}.
 #' @param runCreateCohorts           Logical. Instantiate cohorts via CohortGenerator.
 #' @param triptorelinCohortId         Cohort definition ID of the main triptorelin cohort,
-#'   passed to \code{runBaselineCharacteristics} and \code{runUtilisationAnalysis}
-#'   (as \code{targetCohortId}).
+#'   passed as \code{targetCohortId} to \code{runBaselineCharacteristics} and
+#'   \code{runUtilisationAnalysis}.
 #' @param combinationTreatmentCohortIds Integer vector of cohort definition IDs for
 #'   combination treatment cohorts (ADT alone, ADT + ARPI, ADT + chemotherapy, etc.),
 #'   passed to \code{runUtilisationAnalysis}. \code{NA} entries are silently skipped.
@@ -148,15 +148,17 @@ execute <- function(connectionDetails,
   if (runBaselineCharacteristics) {
     ParallelLogger::logInfo("Step 3: Extracting baseline characteristics")
     runBaselineCharacteristics(
-      connectionDetails        = connectionDetails,
-      cdmDatabaseSchema        = cdmDatabaseSchema,
-      vocabularyDatabaseSchema = vocabularyDatabaseSchema,
-      cohortDatabaseSchema     = cohortDatabaseSchema,
-      cohortTable              = cohortTable,
-      cohortId                 = triptorelinCohortId,
-      databaseId               = databaseId,
-      outputFolder             = outputFolder,
-      maxCores                 = maxCores
+      connectionDetails              = connectionDetails,
+      cdmDatabaseSchema              = cdmDatabaseSchema,
+      vocabularyDatabaseSchema       = vocabularyDatabaseSchema,
+      cohortDatabaseSchema           = cohortDatabaseSchema,
+      cohortTable                    = cohortTable,
+      targetCohortId                 = triptorelinCohortId,
+      combinationTreatmentCohortIds  = combinationTreatmentCohortIds,
+      outcomeCohortIds               = outcomeCohortIds,
+      databaseId                     = databaseId,
+      minCellCount                   = minCellCount,
+      outputFolder                   = outputFolder
     )
   }
 
@@ -170,7 +172,6 @@ execute <- function(connectionDetails,
     runUtilisationAnalysis(
       connectionDetails              = connectionDetails,
       cdmDatabaseSchema              = cdmDatabaseSchema,
-      vocabularyDatabaseSchema       = vocabularyDatabaseSchema,
       cohortDatabaseSchema           = cohortDatabaseSchema,
       cohortTable                    = cohortTable,
       targetCohortId                 = triptorelinCohortId,

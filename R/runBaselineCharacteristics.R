@@ -14,37 +14,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Run baseline cohort characterization using CohortDiagnostics
+#' Run cohort diagnostics for all study cohorts
 #'
-#' Runs temporal cohort characterization via
-#' \code{CohortDiagnostics::executeDiagnostics()} for the main triptorelin
-#' cohort. Only the temporal characterization module is executed here; full
-#' cohort diagnostics (incidence rates, index event breakdown, etc.) are
-#' handled separately in the diagnostics step.
+#' Executes \code{CohortDiagnostics::executeDiagnostics()} across every cohort
+#' used in the study: the main triptorelin cohort, all combination treatment
+#' cohorts, and all outcome cohorts. Running all cohorts together allows
+#' side-by-side comparison in the Diagnostics Explorer.
 #'
-#' Results are exported as a zip file to \code{outputFolder/baselineCharacteristics}
-#' and can be viewed with \code{CohortDiagnostics::launchDiagnosticsExplorer()}.
+#' Modules run:
+#' \itemize{
+#'   \item Temporal cohort characterization (demographics, comorbidities, drugs)
+#'   \item Index event breakdown (formulation / dosing interval)
+#'   \item Inclusion statistics
+#'   \item Visit context
+#'   \item Cohort relationship
+#' }
 #'
-#' @param connectionDetails        DatabaseConnector connection details object.
-#' @param cdmDatabaseSchema        Schema containing the OMOP CDM tables (read-only).
-#' @param vocabularyDatabaseSchema Schema containing the vocabulary tables.
-#' @param cohortDatabaseSchema     Schema where cohort tables are written.
-#' @param cohortTable              Name of the cohort table.
-#' @param cohortId                 Cohort definition ID of the main triptorelin cohort.
-#' @param databaseId               Short site identifier used to label outputs.
-#' @param outputFolder             Path where result files will be written.
-#' @param maxCores                 Number of CPU cores for parallel steps.
+#' Results are exported as a zip file to
+#' \code{outputFolder/baselineCharacteristics} and can be viewed with
+#' \code{CohortDiagnostics::launchDiagnosticsExplorer()}.
+#'
+#' @param connectionDetails               DatabaseConnector connection details object.
+#' @param cdmDatabaseSchema               Schema containing the OMOP CDM tables (read-only).
+#' @param vocabularyDatabaseSchema        Schema containing the vocabulary tables.
+#' @param cohortDatabaseSchema            Schema where cohort tables are written.
+#' @param cohortTable                     Name of the cohort table.
+#' @param targetCohortId                  Cohort definition ID of the main triptorelin cohort.
+#' @param combinationTreatmentCohortIds   Integer vector of combination treatment cohort IDs.
+#'   \code{NA} entries are silently skipped.
+#' @param outcomeCohortIds                Integer vector of outcome cohort IDs.
+#'   \code{NA} entries are silently skipped.
+#' @param databaseId                      Short site identifier used to label outputs.
+#' @param minCellCount                    Minimum cell count for suppression. Default 5.
+#' @param outputFolder                    Path where result files will be written.
 #'
 #' @export
 runBaselineCharacteristics <- function(connectionDetails,
                                        cdmDatabaseSchema,
-                                       vocabularyDatabaseSchema = cdmDatabaseSchema,
+                                       vocabularyDatabaseSchema        = cdmDatabaseSchema,
                                        cohortDatabaseSchema,
                                        cohortTable,
-                                       cohortId,
+                                       targetCohortId,
+                                       combinationTreatmentCohortIds   = integer(0),
+                                       outcomeCohortIds                = integer(0),
                                        databaseId,
-                                       outputFolder,
-                                       maxCores = 1) {
+                                       minCellCount                    = 5,
+                                       outputFolder) {
 
   exportFolder <- file.path(outputFolder, "baselineCharacteristics")
   if (!dir.exists(exportFolder)) {
@@ -52,30 +67,49 @@ runBaselineCharacteristics <- function(connectionDetails,
   }
 
   # --------------------------------------------------------------------------
-  # Build cohort definition set (triptorelin cohort only)
+  # Collect all unique cohort IDs used in the study
   # --------------------------------------------------------------------------
-  pathToCsv <- system.file("settings", "CohortsToCreate.csv", package = "PioneerTriptorelin")
+  allIds <- unique(c(
+    targetCohortId,
+    combinationTreatmentCohortIds[!is.na(combinationTreatmentCohortIds)],
+    outcomeCohortIds[!is.na(outcomeCohortIds)]
+  ))
+
+  # --------------------------------------------------------------------------
+  # Build cohort definition set for all study cohorts
+  # --------------------------------------------------------------------------
+  pathToCsv       <- system.file("settings", "CohortsToCreate.csv", package = "PioneerTriptorelin")
   cohortsToCreate <- readr::read_csv(pathToCsv, col_types = readr::cols())
   cohortsToCreate <- dplyr::rename(cohortsToCreate, cohortName = cohort_name)
 
-  row <- cohortsToCreate[cohortsToCreate$cohortId == cohortId, ]
-  if (nrow(row) == 0) {
-    stop("cohortId ", cohortId, " not found in CohortsToCreate.csv")
+  jsonFolder <- system.file("cohorts",          package = "PioneerTriptorelin")
+  sqlFolder  <- system.file("sql", "sql_server", package = "PioneerTriptorelin")
+
+  rows <- cohortsToCreate[cohortsToCreate$cohortId %in% allIds, ]
+  if (nrow(rows) == 0) {
+    stop("None of the supplied cohort IDs were found in CohortsToCreate.csv")
   }
 
-  jsonFolder <- system.file("cohorts",           package = "PioneerTriptorelin")
-  sqlFolder  <- system.file("sql", "sql_server",  package = "PioneerTriptorelin")
+  missing <- setdiff(allIds, rows$cohortId)
+  if (length(missing) > 0) {
+    ParallelLogger::logWarn(
+      "The following cohort IDs were not found in CohortsToCreate.csv and will be skipped: ",
+      paste(missing, collapse = ", ")
+    )
+  }
 
-  cohortDefinitionSet <- data.frame(
-    cohortId   = row$cohortId,
-    cohortName = row$cohortName,
-    json       = paste(readLines(file.path(jsonFolder, paste0(row$cohortId, ".json")), warn = FALSE), collapse = "\n"),
-    sql        = paste(readLines(file.path(sqlFolder,  paste0(row$cohortId, ".sql")),  warn = FALSE), collapse = "\n"),
-    stringsAsFactors = FALSE
-  )
+  cohortDefinitionSet <- do.call(rbind, lapply(seq_len(nrow(rows)), function(i) {
+    data.frame(
+      cohortId   = rows$cohortId[i],
+      cohortName = rows$cohortName[i],
+      json       = paste(readLines(file.path(jsonFolder, paste0(rows$cohortId[i], ".json")), warn = FALSE), collapse = "\n"),
+      sql        = paste(readLines(file.path(sqlFolder,  paste0(rows$cohortId[i], ".sql")),  warn = FALSE), collapse = "\n"),
+      stringsAsFactors = FALSE
+    )
+  }))
 
   # --------------------------------------------------------------------------
-  # Temporal covariate settings
+  # Temporal covariate settings (14 windows)
   # --------------------------------------------------------------------------
   temporalCovariateSettings <- FeatureExtraction::createTemporalCovariateSettings(
     useDemographicsGender               = TRUE,
@@ -120,7 +154,11 @@ runBaselineCharacteristics <- function(connectionDetails,
           0, # index date only
           1, # 1 day after to day 30
          31, # 31 days after to day 365
-      -9999  # any time prior to any time future
+      -9999, # any time prior to any time future
+        -30, # 30 days prior to 9999 days after
+        -30, # 30 days prior to 365 days after
+        -30, # 30 days prior to 180 days after
+        -30  # 30 days prior to 30 days after
     ),
     temporalEndDays = c(
          0, # anytime prior
@@ -132,14 +170,21 @@ runBaselineCharacteristics <- function(connectionDetails,
          0, # index date only
         30, # 1 day after to day 30
        365, # 31 days after to day 365
-      9999  # any time prior to any time future
+      9999, # any time prior to any time future
+      9999, # all after
+       365,
+       180,
+        30
     )
   )
 
   # --------------------------------------------------------------------------
-  # Run characterization via CohortDiagnostics
+  # Run diagnostics across all study cohorts
   # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Running temporal cohort characterization for cohort ", cohortId)
+  ParallelLogger::logInfo(
+    "Running cohort diagnostics for ", nrow(cohortDefinitionSet), " cohorts: ",
+    paste(cohortDefinitionSet$cohortId, collapse = ", ")
+  )
 
   CohortDiagnostics::executeDiagnostics(
     cohortDefinitionSet               = cohortDefinitionSet,
@@ -152,15 +197,19 @@ runBaselineCharacteristics <- function(connectionDetails,
     vocabularyDatabaseSchema          = vocabularyDatabaseSchema,
     temporalCovariateSettings         = temporalCovariateSettings,
     runTemporalCohortCharacterization = TRUE,
-    runInclusionStatistics            = TRUE,
-    runIncidenceRate                  = FALSE,
-    runCohortRelationship             = TRUE,
-    runOrphanConcepts                 = FALSE,
     runBreakdownIndexEvents           = TRUE,
-    runTimeSeries                     = FALSE,
+    runInclusionStatistics            = TRUE,
     runVisitContext                   = TRUE,
-    minCellCount                      = 5
+    runCohortRelationship             = TRUE,
+    runIncidenceRate                  = FALSE,
+    runOrphanConcepts                 = FALSE,
+    runTimeSeries                     = FALSE,
+    minCellCount                      = minCellCount
   )
 
-  ParallelLogger::logInfo("Baseline characterization complete. Results written to ", exportFolder)
+  ParallelLogger::logInfo(
+    "Cohort diagnostics complete. Results written to ", exportFolder,
+    ". Load with CohortDiagnostics::launchDiagnosticsExplorer()."
+  )
+  invisible(NULL)
 }

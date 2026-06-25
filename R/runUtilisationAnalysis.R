@@ -89,45 +89,39 @@
 
 #' Describe real-world utilisation of triptorelin in mHSPC
 #'
-#' Runs four sub-analyses:
+#' Runs two sub-analyses:
 #' \enumerate{
-#'   \item \strong{Baseline demographics} — temporal cohort characterisation of
-#'     the target cohort via \code{CohortDiagnostics::executeDiagnostics()}.
-#'   \item \strong{Formulation / dosing interval} — index event breakdown showing
-#'     the distribution of 1-, 3-, and 6-month triptorelin depot formulations.
 #'   \item \strong{Combination regimen distribution} — subject counts and
 #'     percentages for each combination treatment cohort (e.g. ADT alone,
 #'     ADT + ARPI, ADT + chemotherapy, ADT + ARPI + chemotherapy).
 #'   \item \strong{Adverse event incidence rates} — incidence rates (per 1,000
-#'     person-years) with 95\% Poisson confidence intervals for each AE outcome
+#'     person-years) with 95\% Poisson confidence intervals for each outcome
 #'     cohort, following the approach of the PioneerMetastaticAE package.
 #'     Episodic/chronic classification is read from
 #'     \code{inst/settings/IRsettings.csv}.
 #' }
 #'
-#' Sub-analyses 1 and 2 are produced by a single \code{executeDiagnostics()}
-#' call and exported as a zip archive viewable with
-#' \code{CohortDiagnostics::launchDiagnosticsExplorer()}.
+#' Cohort diagnostics (baseline demographics, index event breakdown, formulation
+#' distribution) are produced separately by \code{runBaselineCharacteristics()}.
 #'
 #' @param connectionDetails           DatabaseConnector connection details object.
 #' @param cdmDatabaseSchema           Schema containing the OMOP CDM tables
 #'   (read-only).
-#' @param vocabularyDatabaseSchema    Schema containing the vocabulary tables
-#'   (usually the same as \code{cdmDatabaseSchema}).
 #' @param cohortDatabaseSchema        Schema where cohort tables are written
 #'   (needs read/write/delete).
 #' @param cohortTable                 Name of the cohort table.
 #' @param targetCohortId              Integer. Cohort definition ID of the main
-#'   triptorelin cohort (used for sub-analyses 1, 2, and 4).
+#'   triptorelin cohort (used as denominator for combination regimen percentages
+#'   and as the time-at-risk cohort for incidence rates).
 #' @param combinationTreatmentCohortIds Integer vector of cohort definition IDs
-#'   for combination treatment cohorts (sub-analysis 3). \code{NA} entries are
+#'   for combination treatment cohorts (sub-analysis 1). \code{NA} entries are
 #'   silently skipped. Cohort names are resolved from
 #'   \code{inst/settings/CohortsToCreate.csv}.
 #' @param outcomeCohortIds            Integer vector of cohort definition IDs for
-#'   adverse event outcome cohorts (sub-analysis 4). \code{NA} entries are
-#'   silently skipped. Cohort names are resolved from
-#'   \code{inst/settings/CohortsToCreate.csv}; episodic/chronic classification
-#'   is resolved from \code{inst/settings/IRsettings.csv}.
+#'   outcome cohorts (sub-analysis 2). \code{NA} entries are silently skipped.
+#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv};
+#'   episodic/chronic classification is resolved from
+#'   \code{inst/settings/IRsettings.csv}.
 #' @param databaseId                  Short site identifier used to label outputs.
 #' @param minCellCount                Minimum event count for a cell to be
 #'   reported; rows with fewer events have IR and CI suppressed to \code{NA}.
@@ -137,7 +131,6 @@
 #' @export
 runUtilisationAnalysis <- function(connectionDetails,
                                    cdmDatabaseSchema,
-                                   vocabularyDatabaseSchema    = cdmDatabaseSchema,
                                    cohortDatabaseSchema,
                                    cohortTable,
                                    targetCohortId,
@@ -166,131 +159,9 @@ runUtilisationAnalysis <- function(connectionDetails,
   }
 
   # --------------------------------------------------------------------------
-  # Sub-analysis 1 + 2: Baseline demographics and formulation breakdown
-  #
-  # A single CohortDiagnostics call covering:
-  #   - Temporal cohort characterisation (demographics, comorbidities, drugs)
-  #   - Index event breakdown (1-/3-/6-month triptorelin depot)
+  # Sub-analysis 1: Combination regimen distribution
   # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Utilisation step 1+2: baseline demographics and formulation breakdown")
-
-  baselineFolder <- file.path(utilisationFolder, "baselineAndFormulation")
-  if (!dir.exists(baselineFolder)) dir.create(baselineFolder, recursive = TRUE)
-
-  # Build single-row cohort definition set for the target cohort
-  allCohortDefs <- CohortGenerator::getCohortDefinitionSet(
-    settingsFileName     = system.file("settings", "CohortsToCreate.csv",
-                                       package = "PioneerTriptorelin"),
-    jsonFolder           = system.file("cohorts",
-                                       package = "PioneerTriptorelin"),
-    sqlFolder            = system.file("sql", "sql_server",
-                                       package = "PioneerTriptorelin"),
-    cohortFileNameFormat = "%s",
-    cohortFileNameValue  = c("cohortId")
-  )
-
-  targetCohortDef <- allCohortDefs[allCohortDefs$cohortId == targetCohortId, ]
-  if (nrow(targetCohortDef) == 0) {
-    stop("targetCohortId ", targetCohortId, " not found in CohortsToCreate.csv")
-  }
-
-  temporalCovariateSettings <- FeatureExtraction::createTemporalCovariateSettings(
-    useDemographicsGender               = TRUE,
-    useDemographicsAge                  = TRUE,
-    useDemographicsAgeGroup             = TRUE,
-    useDemographicsRace                 = TRUE,
-    useDemographicsEthnicity            = TRUE,
-    useDemographicsIndexYear            = TRUE,
-    useDemographicsIndexMonth           = TRUE,
-    useDemographicsIndexYearMonth       = TRUE,
-    useDemographicsPriorObservationTime = TRUE,
-    useDemographicsPostObservationTime  = TRUE,
-    useDemographicsTimeInCohort         = TRUE,
-    useConditionOccurrence              = TRUE,
-    useProcedureOccurrence              = TRUE,
-    useDrugEraStart                     = TRUE,
-    useMeasurement                      = TRUE,
-    useConditionEraStart                = TRUE,
-    useConditionEraOverlap              = TRUE,
-    useConditionEraGroupStart           = FALSE, # https://github.com/OHDSI/FeatureExtraction/issues/144
-    useConditionEraGroupOverlap         = TRUE,
-    useDrugExposure                     = FALSE, # too many concept IDs
-    useDrugEraOverlap                   = FALSE,
-    useDrugEraGroupStart                = FALSE, # https://github.com/OHDSI/FeatureExtraction/issues/144
-    useDrugEraGroupOverlap              = TRUE,
-    useObservation                      = TRUE,
-    useVisitConceptCount                = TRUE,
-    useVisitCount                       = TRUE,
-    useDeviceExposure                   = TRUE,
-    useCharlsonIndex                    = TRUE,
-    useDcsi                             = TRUE,
-    useChads2                           = TRUE,
-    useChads2Vasc                       = TRUE,
-    useHfrs                             = FALSE,
-    temporalStartDays = c(
-      -9999, # anytime prior
-       -365, # long term prior
-       -180, # medium term prior
-        -30, # short term prior
-       -365, # one year prior to -31
-        -30, # 30 days prior, not including day 0
-          0, # index date only
-          1, # 1 day after to day 30
-         31, # 31 days after to day 365
-      -9999, # any time prior to any time future
-        -30,
-        -30,
-        -30,
-        -30
-    ),
-    temporalEndDays = c(
-         0, # anytime prior
-         0, # long term prior
-         0, # medium term prior
-         0, # short term prior
-       -31, # one year prior to -31
-        -1, # 30 days prior, not including day 0
-         0, # index date only
-        30, # 1 day after to day 30
-       365, # 31 days after to day 365
-      9999, # any time prior to any time future
-      9999, # all after
-       365,
-       180,
-        30
-    )
-  )
-
-  CohortDiagnostics::executeDiagnostics(
-    cohortDefinitionSet               = targetCohortDef,
-    exportFolder                      = baselineFolder,
-    databaseId                        = databaseId,
-    connectionDetails                 = connectionDetails,
-    cdmDatabaseSchema                 = cdmDatabaseSchema,
-    cohortDatabaseSchema              = cohortDatabaseSchema,
-    cohortTable                       = cohortTable,
-    vocabularyDatabaseSchema          = vocabularyDatabaseSchema,
-    temporalCovariateSettings         = temporalCovariateSettings,
-    runTemporalCohortCharacterization = TRUE,   # sub-analysis 1: baseline demographics
-    runBreakdownIndexEvents           = TRUE,   # sub-analysis 2: formulation breakdown
-    runInclusionStatistics            = TRUE,
-    runVisitContext                   = TRUE,
-    runCohortRelationship             = FALSE,
-    runIncidenceRate                  = FALSE,
-    runOrphanConcepts                 = FALSE,
-    runTimeSeries                     = FALSE,
-    minCellCount                      = minCellCount
-  )
-
-  ParallelLogger::logInfo(
-    "Baseline + formulation results written to ", baselineFolder,
-    ". Load with CohortDiagnostics::launchDiagnosticsExplorer()."
-  )
-
-  # --------------------------------------------------------------------------
-  # Sub-analysis 3: Combination regimen distribution
-  # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Utilisation step 3: combination regimen distribution")
+  ParallelLogger::logInfo("Utilisation step 1: combination regimen distribution")
 
   validCombIds <- combinationTreatmentCohortIds[!is.na(combinationTreatmentCohortIds)]
 
@@ -324,14 +195,14 @@ runUtilisationAnalysis <- function(connectionDetails,
   }
 
   # --------------------------------------------------------------------------
-  # Sub-analysis 4: Adverse event incidence rates
+  # Sub-analysis 2: Adverse event incidence rates
   #
   # Approach: custom IR calculation following PioneerMetastaticAE.
   #   - Episodic/chronic classification from inst/settings/IRsettings.csv
   #   - IR = events / person-years × 1,000
   #   - 95% CI via survival::cipoisson()
   # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Utilisation step 4: adverse event incidence rates")
+  ParallelLogger::logInfo("Utilisation step 2: adverse event incidence rates")
 
   validOutcomeIds <- outcomeCohortIds[!is.na(outcomeCohortIds)]
 
