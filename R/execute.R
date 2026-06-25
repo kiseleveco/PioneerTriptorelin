@@ -26,9 +26,9 @@
 #' @param runBaselineCharacteristics Logical. Extract baseline covariates via FeatureExtraction.
 #' @param runUtilisationAnalysis     Logical. Describe depot formulation, combination regimen
 #'   use, and adverse event incidence rates.
-#' @param outcomeCohortIds           Named integer vector of outcome cohort IDs passed to
-#'   \code{runSafetyAnalysis}. Expected names: \code{mace}, \code{mi}, \code{stroke},
-#'   \code{af}, \code{vte}, \code{diabetes}, \code{fractures}.
+#' @param outcomeCohortIds           Integer vector of outcome cohort IDs passed to
+#'   \code{runSafetyAnalysis} and \code{runBaselineCharacteristics}.
+#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
 #' @param minCellCount               Minimum event count for KM table rows to be reported.
 #'   Rows below this threshold are suppressed. Default 5.
 #' @param runSafetyAnalysis          Logical. Run KM + Cox for CV, VTE, diabetes, and fracture endpoints.
@@ -146,7 +146,7 @@ execute <- function(connectionDetails,
   # Step 2: Baseline characteristics
   # ----------------------------------------------------------------------------
   if (runBaselineCharacteristics) {
-    ParallelLogger::logInfo("Step 3: Extracting baseline characteristics")
+    ParallelLogger::logInfo("Step 2: Extracting baseline characteristics")
     runBaselineCharacteristics(
       connectionDetails              = connectionDetails,
       cdmDatabaseSchema              = cdmDatabaseSchema,

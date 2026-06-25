@@ -50,6 +50,11 @@ combinationTreatmentCohortIds <- c(
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
 outcomeCohortIds <- c(1688, 1689, 1690, 1691)
 
+# CV comparison cohorts (fill in if runCvComparison = TRUE)
+withCvCohortId    <- NA_integer_   # triptorelin patients WITH prior CV history
+withoutCvCohortId <- NA_integer_   # triptorelin patients WITHOUT prior CV history
+cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
+
 minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
 
 ## -- Dataset metadata ---------------------------------------------------------

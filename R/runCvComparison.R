@@ -34,8 +34,8 @@
 #' @param cohortTable           Name of the cohort table.
 #' @param withCvCohortId        Cohort ID for triptorelin patients WITH prior CV history (target).
 #' @param withoutCvCohortId     Cohort ID for triptorelin patients WITHOUT prior CV history (comparator).
-#' @param cvOutcomeCohortIds    Named integer vector of CV outcome cohort IDs.
-#'   Expected names: \code{mace}, \code{mi}, \code{stroke}, \code{af}.
+#' @param cvOutcomeCohortIds    Integer vector of CV outcome cohort IDs.
+#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
 #' @param databaseId            Short site identifier used to label outputs.
 #' @param databaseName          Human-readable site name.
 #' @param databaseDescription   One-sentence description of the data source.
@@ -124,9 +124,18 @@ runCvComparison <- function(connectionDetails,
   # --------------------------------------------------------------------------
   # 2. Target-comparator-outcomes specification
   # --------------------------------------------------------------------------
-  outcomes <- lapply(names(cvOutcomeCohortIds), function(name) {
+  cohortsToCreate <- readr::read_csv(
+    system.file("settings", "CohortsToCreate.csv", package = "PioneerTriptorelin"),
+    col_types = readr::cols()
+  )
+  .cohortName <- function(id) {
+    nm <- cohortsToCreate$cohort_name[cohortsToCreate$cohortId == id]
+    if (length(nm) == 0 || is.na(nm[1])) as.character(id) else nm[1]
+  }
+
+  outcomes <- lapply(seq_along(cvOutcomeCohortIds), function(i) {
     CohortMethod::createOutcome(
-      outcomeId        = cvOutcomeCohortIds[[name]],
+      outcomeId         = cvOutcomeCohortIds[[i]],
       outcomeOfInterest = TRUE
     )
   })
