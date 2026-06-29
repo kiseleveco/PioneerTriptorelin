@@ -71,7 +71,7 @@ maxCores <- parallel::detectCores()
 # ------------------------------------------------------------------------------
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
-incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
+incrementalCohorts         <- FALSE   # TRUE = skip cohorts whose SQL has not changed since last run
 includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
 runCreateCohorts           <- TRUE
 runBaselineCharacteristics <- TRUE

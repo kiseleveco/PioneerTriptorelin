@@ -384,6 +384,92 @@ JOIN @cdm_database_schema.OBSERVATION_PERIOD OP on Q.person_id = OP.person_id
   INNER JOIN
   (
     -- Begin Correlated Criteria
+select 0 as index_id, p.person_id, p.event_id
+from (SELECT Q.person_id, Q.event_id, Q.start_date, Q.end_date, Q.visit_occurrence_id, OP.observation_period_start_date as op_start_date, OP.observation_period_end_date as op_end_date
+FROM (-- Begin Drug Exposure Criteria
+select C.person_id, C.drug_exposure_id as event_id, C.drug_exposure_start_date as start_date,
+       COALESCE(C.DRUG_EXPOSURE_END_DATE, DATEADD(day,C.DAYS_SUPPLY,DRUG_EXPOSURE_START_DATE), DATEADD(day,1,C.DRUG_EXPOSURE_START_DATE)) as end_date,
+       C.visit_occurrence_id,C.drug_exposure_start_date as sort_date
+from 
+(
+  select de.* , row_number() over (PARTITION BY de.person_id ORDER BY de.drug_exposure_start_date, de.drug_exposure_id) as ordinal
+  FROM @cdm_database_schema.DRUG_EXPOSURE de
+JOIN #Codesets cs on (de.drug_concept_id = cs.concept_id and cs.codeset_id = 24)
+) C
+
+WHERE C.ordinal = 1
+-- End Drug Exposure Criteria
+) Q
+JOIN @cdm_database_schema.OBSERVATION_PERIOD OP on Q.person_id = OP.person_id 
+  and OP.observation_period_start_date <= Q.start_date and OP.observation_period_end_date >= Q.start_date
+) p
+LEFT JOIN (
+SELECT p.person_id, p.event_id 
+FROM (SELECT Q.person_id, Q.event_id, Q.start_date, Q.end_date, Q.visit_occurrence_id, OP.observation_period_start_date as op_start_date, OP.observation_period_end_date as op_end_date
+FROM (-- Begin Drug Exposure Criteria
+select C.person_id, C.drug_exposure_id as event_id, C.drug_exposure_start_date as start_date,
+       COALESCE(C.DRUG_EXPOSURE_END_DATE, DATEADD(day,C.DAYS_SUPPLY,DRUG_EXPOSURE_START_DATE), DATEADD(day,1,C.DRUG_EXPOSURE_START_DATE)) as end_date,
+       C.visit_occurrence_id,C.drug_exposure_start_date as sort_date
+from 
+(
+  select de.* , row_number() over (PARTITION BY de.person_id ORDER BY de.drug_exposure_start_date, de.drug_exposure_id) as ordinal
+  FROM @cdm_database_schema.DRUG_EXPOSURE de
+JOIN #Codesets cs on (de.drug_concept_id = cs.concept_id and cs.codeset_id = 24)
+) C
+
+WHERE C.ordinal = 1
+-- End Drug Exposure Criteria
+) Q
+JOIN @cdm_database_schema.OBSERVATION_PERIOD OP on Q.person_id = OP.person_id 
+  and OP.observation_period_start_date <= Q.start_date and OP.observation_period_end_date >= Q.start_date
+) P
+JOIN (
+  -- Begin Drug Exposure Criteria
+select C.person_id, C.drug_exposure_id as event_id, C.drug_exposure_start_date as start_date,
+       COALESCE(C.DRUG_EXPOSURE_END_DATE, DATEADD(day,C.DAYS_SUPPLY,DRUG_EXPOSURE_START_DATE), DATEADD(day,1,C.DRUG_EXPOSURE_START_DATE)) as end_date,
+       C.visit_occurrence_id,C.drug_exposure_start_date as sort_date
+from 
+(
+  select de.* 
+  FROM @cdm_database_schema.DRUG_EXPOSURE de
+JOIN #Codesets cs on (de.drug_concept_id = cs.concept_id and cs.codeset_id = 32)
+) C
+
+
+-- End Drug Exposure Criteria
+
+) A on A.person_id = P.person_id  AND A.START_DATE >= P.OP_START_DATE AND A.START_DATE <= P.OP_END_DATE AND A.START_DATE >= DATEADD(day,-30,P.START_DATE) AND A.START_DATE <= P.OP_END_DATE ) cc on p.person_id = cc.person_id and p.event_id = cc.event_id
+GROUP BY p.person_id, p.event_id
+HAVING COUNT(cc.event_id) = 0
+-- End Correlated Criteria
+
+UNION ALL
+-- Begin Criteria Group
+select 1 as index_id, person_id, event_id
+FROM
+(
+  select E.person_id, E.event_id 
+  FROM (SELECT Q.person_id, Q.event_id, Q.start_date, Q.end_date, Q.visit_occurrence_id, OP.observation_period_start_date as op_start_date, OP.observation_period_end_date as op_end_date
+FROM (-- Begin Drug Exposure Criteria
+select C.person_id, C.drug_exposure_id as event_id, C.drug_exposure_start_date as start_date,
+       COALESCE(C.DRUG_EXPOSURE_END_DATE, DATEADD(day,C.DAYS_SUPPLY,DRUG_EXPOSURE_START_DATE), DATEADD(day,1,C.DRUG_EXPOSURE_START_DATE)) as end_date,
+       C.visit_occurrence_id,C.drug_exposure_start_date as sort_date
+from 
+(
+  select de.* , row_number() over (PARTITION BY de.person_id ORDER BY de.drug_exposure_start_date, de.drug_exposure_id) as ordinal
+  FROM @cdm_database_schema.DRUG_EXPOSURE de
+JOIN #Codesets cs on (de.drug_concept_id = cs.concept_id and cs.codeset_id = 24)
+) C
+
+WHERE C.ordinal = 1
+-- End Drug Exposure Criteria
+) Q
+JOIN @cdm_database_schema.OBSERVATION_PERIOD OP on Q.person_id = OP.person_id 
+  and OP.observation_period_start_date <= Q.start_date and OP.observation_period_end_date >= Q.start_date
+) E
+  INNER JOIN
+  (
+    -- Begin Correlated Criteria
 select 0 as index_id, cc.person_id, cc.event_id
 from (SELECT p.person_id, p.event_id 
 FROM (SELECT Q.person_id, Q.event_id, Q.start_date, Q.end_date, Q.visit_occurrence_id, OP.observation_period_start_date as op_start_date, OP.observation_period_end_date as op_end_date
@@ -468,6 +554,12 @@ HAVING COUNT(cc.event_id) >= 1
   ) CQ on E.person_id = CQ.person_id and E.event_id = CQ.event_id
   GROUP BY E.person_id, E.event_id
   HAVING COUNT(index_id) > 0
+) G
+-- End Criteria Group
+
+  ) CQ on E.person_id = CQ.person_id and E.event_id = CQ.event_id
+  GROUP BY E.person_id, E.event_id
+  HAVING COUNT(index_id) = 2
 ) G
 -- End Criteria Group
 ) AC on AC.person_id = pe.person_id and AC.event_id = pe.event_id
