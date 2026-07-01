@@ -131,13 +131,6 @@ runSafetyAnalysis <- function(connectionDetails,
       ci_upper = kmFit$upper
     )
 
-    # Suppress rows with fewer than minCellCount events
-    suppress <- kmTable$n_event > 0 & kmTable$n_event < minCellCount
-    kmTable$surv[suppress]     <- NA
-    kmTable$std_err[suppress]  <- NA
-    kmTable$ci_lower[suppress] <- NA
-    kmTable$ci_upper[suppress] <- NA
-
     kmTable$outcome    <- outcomeName
     kmTable$databaseId <- databaseId
 
