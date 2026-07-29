@@ -15,94 +15,18 @@
 # limitations under the License.
 
 # ------------------------------------------------------------------------------
-# Private helpers
-# ------------------------------------------------------------------------------
-
-# Compute incidence rate + Poisson 95% CI for a single target-outcome pair.
-# Returns a one-row data frame; suppresses IR/CI when n_events < minCellCount.
-.calculateIR <- function(connection,
-                          cohortDatabaseSchema,
-                          cohortTable,
-                          targetId,
-                          outcomeId,
-                          outcomeName,
-                          isEpisodic,
-                          minCellCount,
-                          dbms) {
-
-  sqlFile <- if (isEpisodic) "getIRDataEpisodic.sql" else "getIRDataChronic.sql"
-
-  sql <- SqlRender::readSql(
-    system.file("sql", "sql_server", sqlFile, package = "PioneerTriptorelin")
-  )
-  sql <- SqlRender::render(sql,
-    cohort_database_schema = cohortDatabaseSchema,
-    cohort_table           = cohortTable,
-    target_id              = targetId,
-    outcome_id             = outcomeId
-  )
-  sql <- SqlRender::translate(sql, targetDialect = dbms)
-
-  row <- DatabaseConnector::querySql(connection, sql, snakeCaseToCamelCase = TRUE)
-
-  nPersons    <- row$nPersons
-  nEvents     <- row$nEvents
-  personYears <- row$personYears
-
-  # Suppress small cell counts
-  if (is.na(nEvents) || nEvents < minCellCount) {
-    return(data.frame(
-      targetId               = targetId,
-      outcomeId              = outcomeId,
-      outcomeName            = outcomeName,
-      type                   = if (isEpisodic) "episodic" else "chronic",
-      nPersons               = nPersons,
-      nEvents                = NA_integer_,
-      personYears            = NA_real_,
-      incidenceRatePer1000Py = NA_real_,
-      ci95Lb                 = NA_real_,
-      ci95Ub                 = NA_real_,
-      stringsAsFactors       = FALSE
-    ))
-  }
-
-  ci <- survival::cipoisson(nEvents) / personYears
-
-  data.frame(
-    targetId               = targetId,
-    outcomeId              = outcomeId,
-    outcomeName            = outcomeName,
-    type                   = if (isEpisodic) "episodic" else "chronic",
-    nPersons               = nPersons,
-    nEvents                = nEvents,
-    personYears            = round(personYears, 2),
-    incidenceRatePer1000Py = round(nEvents / personYears * 1000, 2),
-    ci95Lb                 = round(ci[1] * 1000, 2),
-    ci95Ub                 = round(ci[2] * 1000, 2),
-    stringsAsFactors       = FALSE
-  )
-}
-
-# ------------------------------------------------------------------------------
 # Main function
 # ------------------------------------------------------------------------------
 
 #' Describe real-world utilisation of triptorelin in mHSPC
 #'
-#' Runs two sub-analyses:
-#' \enumerate{
-#'   \item \strong{Combination regimen distribution} — subject counts and
-#'     percentages for each combination treatment cohort (e.g. ADT alone,
-#'     ADT + ARPI, ADT + chemotherapy, ADT + ARPI + chemotherapy).
-#'   \item \strong{Adverse event incidence rates} — incidence rates (per 1,000
-#'     person-years) with 95\% Poisson confidence intervals for each outcome
-#'     cohort, following the approach of the PioneerMetastaticAE package.
-#'     Episodic/chronic classification is read from
-#'     \code{inst/settings/IRsettings.csv}.
-#' }
+#' Computes the \strong{combination regimen distribution} — subject counts and
+#' percentages for each combination treatment cohort (e.g. ADT alone,
+#' ADT + ARPI, ADT + chemotherapy, ADT + ARPI + chemotherapy).
 #'
 #' Cohort diagnostics (baseline demographics, index event breakdown, formulation
-#' distribution) are produced separately by \code{runBaselineCharacteristics()}.
+#' distribution) are produced separately by \code{runBaselineCharacteristics()};
+#' adverse event incidence rates are produced by \code{runSafetyAnalysis()}.
 #'
 #' @param connectionDetails           DatabaseConnector connection details object.
 #' @param cdmDatabaseSchema           Schema containing the OMOP CDM tables
@@ -111,20 +35,13 @@
 #'   (needs read/write/delete).
 #' @param cohortTable                 Name of the cohort table.
 #' @param targetCohortId              Integer. Cohort definition ID of the main
-#'   triptorelin cohort (used as denominator for combination regimen percentages
-#'   and as the time-at-risk cohort for incidence rates).
+#'   triptorelin cohort (used as denominator for combination regimen
+#'   percentages).
 #' @param combinationTreatmentCohortIds Integer vector of cohort definition IDs
-#'   for combination treatment cohorts (sub-analysis 1). \code{NA} entries are
-#'   silently skipped. Cohort names are resolved from
-#'   \code{inst/settings/CohortsToCreate.csv}.
-#' @param outcomeCohortIds            Integer vector of cohort definition IDs for
-#'   outcome cohorts (sub-analysis 2). \code{NA} entries are silently skipped.
-#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv};
-#'   episodic/chronic classification is resolved from
-#'   \code{inst/settings/IRsettings.csv}.
+#'   for combination treatment cohorts. \code{NA} entries are silently skipped.
+#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
 #' @param databaseId                  Short site identifier used to label outputs.
-#' @param minCellCount                Minimum event count for a cell to be
-#'   reported; rows with fewer events have IR and CI suppressed to \code{NA}.
+#' @param minCellCount                Minimum count for a cell to be reported.
 #'   Default 5.
 #' @param outputFolder                Path where result files will be written.
 #'
@@ -135,7 +52,6 @@ runUtilisationAnalysis <- function(connectionDetails,
                                    cohortTable,
                                    targetCohortId,
                                    combinationTreatmentCohortIds,
-                                   outcomeCohortIds,
                                    databaseId,
                                    minCellCount = 5,
                                    outputFolder) {
@@ -159,9 +75,9 @@ runUtilisationAnalysis <- function(connectionDetails,
   }
 
   # --------------------------------------------------------------------------
-  # Sub-analysis 1: Combination regimen distribution
+  # Combination regimen distribution
   # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Utilisation step 1: combination regimen distribution")
+  ParallelLogger::logInfo("Utilisation: combination regimen distribution")
 
   validCombIds <- combinationTreatmentCohortIds[!is.na(combinationTreatmentCohortIds)]
 
@@ -192,76 +108,6 @@ runUtilisationAnalysis <- function(connectionDetails,
       na = ""
     )
     ParallelLogger::logInfo("Combination regimen counts written to combinationRegimens.csv")
-  }
-
-  # --------------------------------------------------------------------------
-  # Sub-analysis 2: Adverse event incidence rates
-  #
-  # Approach: custom IR calculation following PioneerMetastaticAE.
-  #   - Episodic/chronic classification from inst/settings/IRsettings.csv
-  #   - IR = events / person-years × 1,000
-  #   - 95% CI via survival::cipoisson()
-  # --------------------------------------------------------------------------
-  ParallelLogger::logInfo("Utilisation step 2: adverse event incidence rates")
-
-  validOutcomeIds <- outcomeCohortIds[!is.na(outcomeCohortIds)]
-
-  if (length(validOutcomeIds) == 0) {
-    ParallelLogger::logWarn(
-      "outcomeCohortIds contains only NA values — skipping incidence rate analysis."
-    )
-  } else {
-    irSettings <- readr::read_csv(
-      system.file("settings", "IRsettings.csv", package = "PioneerTriptorelin"),
-      col_types = readr::cols()
-    )
-
-    connection <- DatabaseConnector::connect(connectionDetails)
-    on.exit(DatabaseConnector::disconnect(connection), add = TRUE)
-    dbms <- attr(connection, "dbms")
-
-    irRows <- lapply(validOutcomeIds, function(outcomeId) {
-      outcomeName <- .cohortName(outcomeId)
-
-      # Look up episodic/chronic from IRsettings.csv; default to episodic
-      settingsRow <- irSettings[irSettings$outcome_id == outcomeId, ]
-      isEpisodic  <- if (nrow(settingsRow) > 0) settingsRow$episodic[1] == 1 else TRUE
-
-      if (isEpisodic) {
-        ParallelLogger::logInfo("  IR (episodic): ", outcomeName, " [", outcomeId, "]")
-      } else {
-        ParallelLogger::logInfo("  IR (chronic):  ", outcomeName, " [", outcomeId, "]")
-      }
-
-      tryCatch(
-        .calculateIR(
-          connection           = connection,
-          cohortDatabaseSchema = cohortDatabaseSchema,
-          cohortTable          = cohortTable,
-          targetId             = targetCohortId,
-          outcomeId            = outcomeId,
-          outcomeName          = outcomeName,
-          isEpisodic           = isEpisodic,
-          minCellCount         = minCellCount,
-          dbms                 = dbms
-        ),
-        error = function(e) {
-          ParallelLogger::logError(
-            "Failed to compute IR for outcome ", outcomeId, ": ", conditionMessage(e)
-          )
-          NULL
-        }
-      )
-    })
-
-    irResults <- do.call(rbind, Filter(Negate(is.null), irRows))
-
-    readr::write_excel_csv(
-      irResults,
-      file.path(utilisationFolder, "incidenceRates.csv"),
-      na = ""
-    )
-    ParallelLogger::logInfo("Incidence rates written to incidenceRates.csv")
   }
 
   ParallelLogger::logInfo(

@@ -100,7 +100,7 @@ if (file.exists(combFile)) {
 # ==============================================================================
 # 2. Adverse event incidence rates (forest-style plot)
 # ==============================================================================
-irFile <- file.path(outputFolder, "utilisationAnalysis", "incidenceRates.csv")
+irFile <- file.path(outputFolder, "safetyAnalysis", "incidenceRates.csv")
 
 if (file.exists(irFile)) {
   ir <- read_csv(irFile, col_types = cols(), show_col_types = FALSE)

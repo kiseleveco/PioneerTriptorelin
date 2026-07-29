@@ -24,11 +24,11 @@
 #'   passed to \code{runUtilisationAnalysis}. \code{NA} entries are silently skipped.
 #'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
 #' @param runBaselineCharacteristics Logical. Extract baseline covariates via FeatureExtraction.
-#' @param runUtilisationAnalysis     Logical. Describe depot formulation, combination regimen
-#'   use, and adverse event incidence rates.
+#' @param runUtilisationAnalysis     Logical. Describe combination regimen use.
 #' @param outcomeCohortIds           Integer vector of outcome cohort IDs passed to
-#'   \code{runSafetyAnalysis} and \code{runBaselineCharacteristics}.
-#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
+#'   \code{runSafetyAnalysis} (KM + incidence rates) and
+#'   \code{runBaselineCharacteristics}. Cohort names are resolved from
+#'   \code{inst/settings/CohortsToCreate.csv}.
 #' @param minCellCount               Minimum event count for KM table rows to be reported.
 #'   Rows below this threshold are suppressed. Default 5.
 #' @param runSafetyAnalysis          Logical. Run KM + Cox for CV, VTE, diabetes, and fracture endpoints.
@@ -176,7 +176,6 @@ execute <- function(connectionDetails,
       cohortTable                    = cohortTable,
       targetCohortId                 = triptorelinCohortId,
       combinationTreatmentCohortIds  = combinationTreatmentCohortIds,
-      outcomeCohortIds               = outcomeCohortIds,
       databaseId                     = databaseId,
       minCellCount                   = minCellCount,
       outputFolder                   = outputFolder

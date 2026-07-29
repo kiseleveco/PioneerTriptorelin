@@ -14,17 +14,87 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# ------------------------------------------------------------------------------
+# Private helpers
+# ------------------------------------------------------------------------------
+
+# Compute incidence rate + Poisson 95% CI for a single target-outcome pair.
+# Returns a one-row data frame; suppresses IR/CI when n_events < minCellCount.
+.calculateIR <- function(connection,
+                         cohortDatabaseSchema,
+                         cohortTable,
+                         targetId,
+                         outcomeId,
+                         outcomeName,
+                         isEpisodic,
+                         minCellCount,
+                         dbms) {
+
+  sqlFile <- if (isEpisodic) "getIRDataEpisodic.sql" else "getIRDataChronic.sql"
+
+  sql <- SqlRender::readSql(
+    system.file("sql", "sql_server", sqlFile, package = "PioneerTriptorelin")
+  )
+  sql <- SqlRender::render(sql,
+    cohort_database_schema = cohortDatabaseSchema,
+    cohort_table           = cohortTable,
+    target_id              = targetId,
+    outcome_id             = outcomeId
+  )
+  sql <- SqlRender::translate(sql, targetDialect = dbms)
+
+  row <- DatabaseConnector::querySql(connection, sql, snakeCaseToCamelCase = TRUE)
+
+  nPersons    <- row$nPersons
+  nEvents     <- row$nEvents
+  personYears <- row$personYears
+
+  # Suppress small cell counts
+  if (is.na(nEvents) || nEvents < minCellCount) {
+    return(data.frame(
+      targetId               = targetId,
+      outcomeId              = outcomeId,
+      outcomeName            = outcomeName,
+      type                   = if (isEpisodic) "episodic" else "chronic",
+      nPersons               = nPersons,
+      nEvents                = NA_integer_,
+      personYears            = NA_real_,
+      incidenceRatePer1000Py = NA_real_,
+      ci95Lb                 = NA_real_,
+      ci95Ub                 = NA_real_,
+      stringsAsFactors       = FALSE
+    ))
+  }
+
+  ci <- survival::cipoisson(nEvents) / personYears
+
+  data.frame(
+    targetId               = targetId,
+    outcomeId              = outcomeId,
+    outcomeName            = outcomeName,
+    type                   = if (isEpisodic) "episodic" else "chronic",
+    nPersons               = nPersons,
+    nEvents                = nEvents,
+    personYears            = round(personYears, 2),
+    incidenceRatePer1000Py = round(nEvents / personYears * 1000, 2),
+    ci95Lb                 = round(ci[1] * 1000, 2),
+    ci95Ub                 = round(ci[2] * 1000, 2),
+    stringsAsFactors       = FALSE
+  )
+}
+
 #' Run safety analysis
 #'
 #' Estimates the 3-year cumulative incidence of safety outcomes (CV events,
-#' VTE, diabetes, fractures) using Kaplan-Meier survival analysis. For CV
-#' outcomes (MACE, MI, stroke, AF), a multivariable Cox proportional hazards
-#' model is additionally fitted, adjusted for age (natural spline) and history
-#' of cardiovascular disease (yes/no).
+#' VTE, diabetes, fractures) using Kaplan-Meier survival analysis, and the
+#' incidence rate (per 1,000 person-years, with 95\% Poisson CI) for each
+#' outcome. Episodic/chronic classification is read from
+#' \code{inst/settings/IRsettings.csv}: chronic (new-onset) outcomes exclude
+#' prevalent cases in both the KM and the incidence rate calculations.
 #'
 #' Individual-level time-to-event data is loaded into memory for computation
 #' only and is never written to disk. All exported files contain aggregated
-#' results only (KM survival table, 3-year point estimates, Cox coefficients).
+#' results only (KM survival table, 3-year point estimates, incidence rates).
 #' Rows with fewer than \code{minCellCount} events are suppressed.
 #'
 #' @param connectionDetails       DatabaseConnector connection details object.
@@ -78,10 +148,12 @@ runSafetyAnalysis <- function(connectionDetails,
 
   connection <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection))
+  dbms <- attr(connection, "dbms")
 
   # Containers for aggregated results across all outcomes
   allKmTables <- list()
   allKm3Year  <- list()
+  allIr       <- list()
 
   for (i in seq_along(outcomeCohortIds)) {
 
@@ -181,6 +253,31 @@ runSafetyAnalysis <- function(connectionDetails,
     }
     allKm3Year[[outcomeName]] <- km3yr
 
+    # --------------------------------------------------------------------------
+    # 3. Incidence rate (per 1,000 person-years, 95% Poisson CI)
+    #    Episodic outcomes count all events; chronic outcomes count first-onset
+    #    among the outcome-naive population (prevalent cases excluded).
+    # --------------------------------------------------------------------------
+    allIr[[outcomeName]] <- tryCatch(
+      .calculateIR(
+        connection           = connection,
+        cohortDatabaseSchema = cohortDatabaseSchema,
+        cohortTable          = cohortTable,
+        targetId             = triptorelinCohortId,
+        outcomeId            = outcomeCohortId,
+        outcomeName          = outcomeName,
+        isEpisodic           = !isChronic,
+        minCellCount         = minCellCount,
+        dbms                 = dbms
+      ),
+      error = function(e) {
+        ParallelLogger::logError(
+          "Failed to compute IR for outcome ", outcomeCohortId, ": ", conditionMessage(e)
+        )
+        NULL
+      }
+    )
+
     # Individual-level tteData goes out of scope here and is not saved
     rm(tteData)
   }
@@ -198,6 +295,12 @@ runSafetyAnalysis <- function(connectionDetails,
     km3YearOut <- do.call(rbind, allKm3Year)
     readr::write_excel_csv(km3YearOut, file.path(safetyFolder, "km3YearEstimates.csv"), na = "")
     ParallelLogger::logInfo("3-year estimates written to km3YearEstimates.csv")
+  }
+
+  if (length(allIr) > 0) {
+    irOut <- do.call(rbind, Filter(Negate(is.null), allIr))
+    readr::write_excel_csv(irOut, file.path(safetyFolder, "incidenceRates.csv"), na = "")
+    ParallelLogger::logInfo("Incidence rates written to incidenceRates.csv")
   }
 
   ParallelLogger::logInfo("Safety analysis complete. Results written to ", safetyFolder)
