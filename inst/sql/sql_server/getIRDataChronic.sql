@@ -3,6 +3,10 @@
 -- cohort end date, whichever comes first.  Each person contributes at most
 -- one event.
 --
+-- Prevalent cases are EXCLUDED: any subject whose outcome occurred before
+-- target cohort entry is dropped from the denominator, so the rate reflects
+-- NEW-ONSET disease among the outcome-naive population at baseline.
+--
 -- Parameters (SqlRender):
 --   @cohort_database_schema  schema containing the cohort table
 --   @cohort_table            cohort table name (base name only)
@@ -30,5 +34,13 @@ FROM (
         AND o.outcome_date      >= t.cohort_start_date
         AND o.outcome_date      <= t.cohort_end_date
     WHERE t.cohort_definition_id = @target_id
+      -- Exclude prevalent cases: outcome occurred BEFORE cohort entry
+      AND NOT EXISTS (
+          SELECT 1
+          FROM   @cohort_database_schema.@cohort_table pre
+          WHERE  pre.subject_id           = t.subject_id
+            AND  pre.cohort_definition_id = @outcome_id
+            AND  pre.cohort_start_date    < t.cohort_start_date
+      )
 ) x
 ;
