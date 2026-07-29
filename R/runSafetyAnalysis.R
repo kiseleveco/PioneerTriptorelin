@@ -66,6 +66,16 @@ runSafetyAnalysis <- function(connectionDetails,
     if (length(nm) == 0 || is.na(nm[1])) as.character(id) else nm[1]
   }
 
+  # Episodic/chronic classification (chronic outcomes exclude prevalent cases)
+  irSettings <- readr::read_csv(
+    system.file("settings", "IRsettings.csv", package = "PioneerTriptorelin"),
+    col_types = readr::cols()
+  )
+  .isChronic <- function(id) {
+    row <- irSettings[irSettings$outcome_id == id, ]
+    nrow(row) > 0 && row$chronic[1] == 1
+  }
+
   connection <- DatabaseConnector::connect(connectionDetails)
   on.exit(DatabaseConnector::disconnect(connection))
 
@@ -92,10 +102,21 @@ runSafetyAnalysis <- function(connectionDetails,
     #    time_to_event : days from index to first outcome or censoring
     #    event         : 1 = outcome occurred, 0 = censored
     #
+    #    Chronic (new-onset) outcomes use getTimeToEventChronic.sql, which
+    #    excludes prevalent cases (outcome before cohort entry). Episodic
+    #    outcomes use getTimeToEvent.sql, which keeps all subjects.
+    #
     #    subject_id is used only for joining and is not retained in the result.
     # --------------------------------------------------------------------------
+    isChronic  <- .isChronic(outcomeCohortId)
+    sqlFile    <- if (isChronic) "getTimeToEventChronic.sql" else "getTimeToEvent.sql"
+    ParallelLogger::logInfo(
+      "  time-to-event (", if (isChronic) "chronic, prevalent excluded" else "episodic",
+      "): ", sqlFile
+    )
+
     sql <- SqlRender::loadRenderTranslateSql(
-      sqlFilename            = "getTimeToEvent.sql",
+      sqlFilename            = sqlFile,
       packageName            = "PioneerTriptorelin",
       dbms                   = attr(connection, "dbms"),
       cohort_database_schema = cohortDatabaseSchema,
