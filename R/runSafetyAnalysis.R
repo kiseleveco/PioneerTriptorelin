@@ -22,6 +22,7 @@
 # Returns a one-row data frame; suppresses IR/CI when n_events < minCellCount.
 .calculateIR <- function(connection,
                          cohortDatabaseSchema,
+                         cdmDatabaseSchema,
                          cohortTable,
                          targetId,
                          outcomeId,
@@ -37,6 +38,7 @@
   )
   sql <- SqlRender::render(sql,
     cohort_database_schema = cohortDatabaseSchema,
+    cdm_database_schema    = cdmDatabaseSchema,
     cohort_table           = cohortTable,
     target_id              = targetId,
     outcome_id             = outcomeId
@@ -262,6 +264,7 @@ runSafetyAnalysis <- function(connectionDetails,
       .calculateIR(
         connection           = connection,
         cohortDatabaseSchema = cohortDatabaseSchema,
+        cdmDatabaseSchema    = cdmDatabaseSchema,
         cohortTable          = cohortTable,
         targetId             = triptorelinCohortId,
         outcomeId            = outcomeCohortId,
