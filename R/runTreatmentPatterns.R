@@ -185,15 +185,42 @@ runTreatmentPatterns <- function(connectionDetails,
     tempFolder   = file.path(tpFolder, "temp")
   )
 
-  # createSaveSettings() nests results under <databaseName>, and pathway_settings.csv
-  # is written to <outputFolder>/<databaseName>/settings/. That subfolder is normally
-  # created by the cohort create/characterize steps, which we skip here (cohorts
-  # already exist), so create the expected tree up front to avoid
-  # "cannot open the connection" on the first write.
-  dir.create(file.path(tpFolder, "output", databaseName, "settings"),
-             recursive = TRUE, showWarnings = FALSE)
-  dir.create(file.path(tpFolder, "temp"),
-             recursive = TRUE, showWarnings = FALSE)
+  # The runCreateCohorts step we skip (cohorts already exist) normally
+  #   (a) creates <databaseName>/settings/ and
+  #   (b) writes settings/cohorts_to_create.csv, which pathway construction reads
+  #       (addLabels) to map event cohort IDs to names via cohortType == "event".
+  # Recreate both here. The file MUST be in TreatmentPatterns format:
+  #   cohortId, cohortName, cohortType ("target"/"event"), atlasId, conceptSet.
+  settingsFolder <- file.path(saveSettings$outputFolder, "settings")
+  dir.create(settingsFolder,            recursive = TRUE, showWarnings = FALSE)
+  dir.create(saveSettings$tempFolder,   recursive = TRUE, showWarnings = FALSE)
+
+  cohortsToCreateTp <- rbind(
+    data.frame(
+      cohortId   = targetCohortId,
+      cohortName = .cohortName(targetCohortId),
+      cohortType = "target",
+      atlasId    = NA_integer_,
+      conceptSet = NA_character_,
+      stringsAsFactors = FALSE
+    ),
+    data.frame(
+      cohortId   = validEventIds,
+      cohortName = vapply(validEventIds, .cohortName, character(1)),
+      cohortType = "event",
+      atlasId    = NA_integer_,
+      conceptSet = NA_character_,
+      stringsAsFactors = FALSE
+    )
+  )
+  utils::write.csv(
+    cohortsToCreateTp,
+    file.path(settingsFolder, "cohorts_to_create.csv"),
+    row.names = FALSE
+  )
+  ParallelLogger::logInfo(
+    "Wrote ", nrow(cohortsToCreateTp), " cohorts to settings/cohorts_to_create.csv"
+  )
 
   # --------------------------------------------------------------------------
   # Run — construct pathways and generate output only. NEVER launch Shiny.
