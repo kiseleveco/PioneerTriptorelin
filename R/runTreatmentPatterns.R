@@ -182,6 +182,16 @@ runTreatmentPatterns <- function(connectionDetails,
     tempFolder   = file.path(tpFolder, "temp")
   )
 
+  # createSaveSettings() nests results under <databaseName>, and pathway_settings.csv
+  # is written to <outputFolder>/<databaseName>/settings/. That subfolder is normally
+  # created by the cohort create/characterize steps, which we skip here (cohorts
+  # already exist), so create the expected tree up front to avoid
+  # "cannot open the connection" on the first write.
+  dir.create(file.path(tpFolder, "output", databaseName, "settings"),
+             recursive = TRUE, showWarnings = FALSE)
+  dir.create(file.path(tpFolder, "temp"),
+             recursive = TRUE, showWarnings = FALSE)
+
   # --------------------------------------------------------------------------
   # Run — construct pathways and generate output only. NEVER launch Shiny.
   # --------------------------------------------------------------------------
