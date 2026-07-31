@@ -36,5 +36,5 @@ Suggests:
     roxygen2
 Remotes:
     mi-erasmusmc/TreatmentPatterns@171b60af7e76f63e09f2c2d48e2b811ce1dafff0,
-    OHDSI/OhdsiSharing
+    OHDSI/OhdsiSharing@6fada2156ac78bfcd6ccea8ec4d6972e3bafa24f
 Config/roxygen2/version: 8.0.0
