@@ -150,13 +150,17 @@ runTreatmentPatterns <- function(connectionDetails,
   )
 
 
-  cohortSettings <-
-    createCohortSettings(
-      cohortsToCreate_location =
-        file.path(system.file(package = "PioneerTriptorelin"),
-                  "settings", "CohortsToCreate.csv"),
-      cohortsFolder = file.path(system.file(package = "PioneerTriptorelin"),
-                                "cohorts"))
+  # Pass target/event data frames (cohortId, cohortName). createCohortSettings()
+  # adds cohortType/atlasId/conceptSet internally. Do NOT use
+  # cohortsToCreate_location with the package CohortsToCreate.csv — that CSV is
+  # the OHDSI schema (cohort_name, cohortId, atlasId) and lacks the columns the
+  # loader selects (cohortName, cohortType, conceptSet).
+  cohortSettings <- TreatmentPatterns::createCohortSettings(
+    targetCohorts   = targetCohorts,
+    eventCohorts    = eventCohorts,
+    loadCohorts     = FALSE,
+    generateCohorts = FALSE
+  )
 
   # createPathwaySettings() takes a list of one-or-more addPathwaySettings() rows
   pathwaySettings <- TreatmentPatterns::createPathwaySettings(
