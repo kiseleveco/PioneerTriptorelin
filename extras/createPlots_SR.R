@@ -21,8 +21,8 @@ library(stringr)
 # ------------------------------------------------------------------------------
 # 0. Paths — adjust outputFolder if running at a different site
 # ------------------------------------------------------------------------------
-outputFolder <- "V:/Users/039757Remmers/Bestanden_urologie/PIONEER_PLUS/Triptorelin/Datasets/Results_marketscan"
-resultFolder   <- "V:/Users/039757Remmers/Bestanden_urologie/PIONEER_PLUS/Triptorelin/Results"
+outputFolder <- "~/output/MarketScan_triptorelin/plots"
+resultFolder   <- "~/output/MarketScan_triptorelin"
 if (!dir.exists(resultFolder)) dir.create(resultFolder, recursive = TRUE)
 
 # ------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ round_based_on_digits <- function(x) {
   sapply(x, function(val) {
     x_str <- as.character(val)
     digits_before_decimal <- nchar(strsplit(x_str, "\\.")[[1]][1])
-    
+
     if (digits_before_decimal == 1) {
       return(format(round(val, 1), nsmall = 1))
     } else if (digits_before_decimal == 2) {
@@ -48,7 +48,7 @@ round_based_on_digits <- function(x) {
     }
   } )
 }
-  
+
 
 # Consistent ggplot2 theme
 theme_pioneer <- function() {
@@ -92,30 +92,30 @@ if (file.exists(combFile)) {
       label = sub("mPC treated ", "", label),
       label = factor(label, levels = label[order(pctOfTarget)]),
       prop_ci = BinomCI(x = cohortEntries, n = sum(cohortEntries), method = "wilson")
-    ) %>% 
-    mutate (prop = paste0( 
+    ) %>%
+    mutate (prop = paste0(
       round_based_on_digits(prop_ci[, 1]*100),
       " (",
-      round_based_on_digits(prop_ci[, 2]*100), 
+      round_based_on_digits(prop_ci[, 2]*100),
       ", ",
       round_based_on_digits(prop_ci[, 3]*100),
       ")"
     )
-    ) 
+    )
 
-  comb %>% 
-    mutate (regimenName = 
-             str_replace (regimenName,  "\\[PIONEER_Triptorelin\\]\\s* mPC treated", "")) %>% 
-    select (regimenName, cohortEntries, prop) %>% 
-  gt() %>% 
+  comb %>%
+    mutate (regimenName =
+             str_replace (regimenName,  "\\[PIONEER_Triptorelin\\]\\s* mPC treated", "")) %>%
+    select (regimenName, cohortEntries, prop) %>%
+  gt() %>%
     tab_header (
       title =  "Cohort conuts",
       subtitle = "MarketScan"
-    ) %>% 
+    ) %>%
     cols_label(
       regimenName = "Treatment",
       cohortEntries = "n",
-      prop = "Proportion and 95% CI (Wilson)") %>% 
+      prop = "Proportion and 95% CI (Wilson)") %>%
     gtsave (file.path(resultFolder, "Cohort counts.docx"))
 }
 
@@ -133,24 +133,24 @@ if (file.exists(irFile)) {
       outcomeName = factor(outcomeName, levels = rev(unique(outcomeName)))
     )
 
-  ir %>% 
-    select (outcomeName, type, incidenceRatePer1000Py:ci95Ub) %>% 
+  ir %>%
+    select (outcomeName, type, incidenceRatePer1000Py:ci95Ub) %>%
     mutate (res = paste0(incidenceRatePer1000Py, " (", ci95Lb, ", ", ci95Ub, ")"),
             type = recode_values (type,
                                   "episodic" ~ "Episodic (all events)",
                                   "chronic" ~ "Chronic (first event)"
                                   )
-            ) %>% 
-    select(- c(contains("95"), incidenceRatePer1000Py)) %>% 
-    gt() %>% 
+            ) %>%
+    select(- c(contains("95"), incidenceRatePer1000Py)) %>%
+    gt() %>%
     tab_header (
       title =  "Adverse event incidence rates",
       subtitle = "MarketScan"
-    ) %>% 
+    ) %>%
     cols_label(
       outcomeName = "Outcome",
       type = "Analysis type",
-      res = "Incidence rate and 95% CI (per 1,000 person-years)") %>% 
+      res = "Incidence rate and 95% CI (per 1,000 person-years)") %>%
     gtsave (file.path(outputFolder, "Incidence rates.docx"))
   message("Saved: Incidence rates.docx")
 } else {
@@ -166,8 +166,8 @@ kmFile <- file.path(outputFolder, "safetyAnalysis", "kmTable.csv")
 if (file.exists(kmFile)) {
   km <- read_csv(kmFile, col_types = cols(), show_col_types = FALSE)
   km <- km %>%
-    group_by (databaseId, outcome) %>% 
-    arrange(databaseId, outcome, time) %>% 
+    group_by (databaseId, outcome) %>%
+    arrange(databaseId, outcome, time) %>%
     mutate(
       outcome  = .cleanName(outcome),
       time_yrs = time / 365.25,
@@ -175,11 +175,11 @@ if (file.exists(kmFile)) {
       ci_lo    = 1 - ci_upper,   # note: flip bounds for cumulative incidence
       ci_hi    = 1 - ci_lower,
       cum_events = cumsum(n_event)
-    ) %>% 
+    ) %>%
     mutate (
       cum_events = case_when (cum_events <5 ~ "<5",
                               T ~ as.character(cum_events))
-    ) %>% 
+    ) %>%
     ungroup()
 
   # Anchor each curve at time 0
@@ -199,11 +199,11 @@ if (file.exists(kmFile)) {
 label.min <- -1.5
 
 for (outcomes.id in (unique (km_plot$outcome))) {
-  df.temp <- km_plot %>% 
-    filter (outcome == outcomes.id) %>% 
-    select(-time) %>% 
+  df.temp <- km_plot %>%
+    filter (outcome == outcomes.id) %>%
+    select(-time) %>%
     rename (time = time_yrs)
-  
+
   ggplot (df.temp, aes(x = time, y = cum_inc*100, ymin = ci_lo*100, ymax = ci_hi*100)) +
     geom_line() +
     geom_ribbon(alpha=0.3)  +
@@ -211,43 +211,43 @@ for (outcomes.id in (unique (km_plot$outcome))) {
     # scale_fill_manual(color = cols[[i]]) +
     labs (x = "Years after initiation of Triptorelin",
           y = paste0 ("Cumulative incidence (%)\n", df.temp$outcome[1])) +
-    scale_x_continuous(breaks = seq(0, 5, by = 1)) + 
+    scale_x_continuous(breaks = seq(0, 5, by = 1)) +
     scale_y_continuous(breaks = seq(0, 1*100, by = .1*100)) +
     coord_cartesian(ylim = c(-0.015*100, 1*100),
                     xlim = c(-2,5)) +
     theme_pioneer() +
     geom_text(x= -1.2, color = "black", y= label.min, label= "Number at risk (cum. events)") +
-    geom_text(x = 0, color = "black",y = label.min, label = paste0(df.temp %>% filter(time > 0) %>% slice (1) %>% pull(n_risk), " (", 
+    geom_text(x = 0, color = "black",y = label.min, label = paste0(df.temp %>% filter(time > 0) %>% slice (1) %>% pull(n_risk), " (",
                                                                    df.temp %>%filter(time > 0) %>% slice (1) %>% pull(cum_events), ")")) +
-    geom_text(x = 1, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 1) %>% slice_tail() %>% pull(n_risk), " (", 
+    geom_text(x = 1, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 1) %>% slice_tail() %>% pull(n_risk), " (",
                                                                    df.temp %>% filter(time <= 1) %>% slice_tail()  %>% pull(cum_events), ")"))+
-    geom_text(x = 2, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 2) %>% slice_tail()  %>% pull(n_risk), " (", 
+    geom_text(x = 2, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 2) %>% slice_tail()  %>% pull(n_risk), " (",
                                                                    df.temp %>% filter(time <= 2) %>% slice_tail()  %>% pull(cum_events), ")")) +
-    geom_text(x = 3, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 3) %>% slice_tail()  %>% pull(n_risk), " (", 
+    geom_text(x = 3, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 3) %>% slice_tail()  %>% pull(n_risk), " (",
                                                                    df.temp %>% filter(time <= 3) %>% slice_tail()  %>% pull(cum_events), ")")) +
-    geom_text(x = 4, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 4) %>% slice_tail()  %>% pull(n_risk), " (", 
+    geom_text(x = 4, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 4) %>% slice_tail()  %>% pull(n_risk), " (",
                                                                    df.temp %>% filter(time <= 4) %>% slice_tail()  %>% pull(cum_events), ")"))+
-    geom_text(x = 5, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 5) %>% slice_tail()  %>% pull(n_risk), " (", 
+    geom_text(x = 5, color = "black",y = label.min, label = paste0(df.temp %>% filter(time <= 5) %>% slice_tail()  %>% pull(n_risk), " (",
                                                                    df.temp %>% filter(time <= 5) %>% slice_tail()  %>% pull(cum_events), ")"))
-  
-  
+
+
   ggsave(file.path(resultFolder, paste0("km_", outcomes.id, ".png")),
          width = 10, height = 6, dpi = 300)
 }
 
 
 ## KM at 3 years
-km_plot %>% 
-  group_by (outcome) %>% 
-  filter (time_yrs <= 3) %>% 
-  slice_tail() %>% 
-  mutate (res = paste0(round_based_on_digits(cum_inc*100) ," (", round_based_on_digits(ci_lo*100), ", ", round_based_on_digits(ci_hi*100), ")")) %>% 
-  select(outcome, res) %>% 
-  gt() %>% 
+km_plot %>%
+  group_by (outcome) %>%
+  filter (time_yrs <= 3) %>%
+  slice_tail() %>%
+  mutate (res = paste0(round_based_on_digits(cum_inc*100) ," (", round_based_on_digits(ci_lo*100), ", ", round_based_on_digits(ci_hi*100), ")")) %>%
+  select(outcome, res) %>%
+  gt() %>%
   tab_header (
     title =  "",
     subtitle = "MarketScan"
-  ) %>% 
+  ) %>%
   cols_label(
-    res = "Survival probability (%) at 3 years") %>% 
+    res = "Survival probability (%) at 3 years") %>%
   gtsave (file.path(resultFolder, "Cumulative incidence at three year.docx"))

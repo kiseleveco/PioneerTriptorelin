@@ -55,7 +55,7 @@ outcomeCohortIds <- c(1688, 1689, 1690, 1691)
 # cohorts (each agent: triptorelin, other ADT, ARPI, chemo, ...), NOT the
 # pre-combined regimen cohorts 1752-1755 — TreatmentPatterns builds combinations
 # itself. These must already exist in CohortsToCreate.csv and be generated.
-TreatmentCohortIds <- c()   # e.g. c(1751, 1699, 1702, 1703)
+TreatmentCohortIds <- c(1758:1763)   # e.g. c(1751, 1699, 1702, 1703)
 
 # CV comparison cohorts (fill in if runCvComparison = TRUE)
 withCvCohortId    <- NA_integer_   # triptorelin patients WITH prior CV history
@@ -78,10 +78,10 @@ maxCores <- parallel::detectCores()
 # ------------------------------------------------------------------------------
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
-incrementalCohorts         <- FALSE   # TRUE = skip cohorts whose SQL has not changed since last run
+incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
 includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
 runCreateCohorts           <- TRUE
-runBaselineCharacteristics <- TRUE
+runBaselineCharacteristics <- FALSE
 runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
 runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history

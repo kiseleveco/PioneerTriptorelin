@@ -1,0 +1,2872 @@
+{
+	"cdmVersionRange" : ">=5.0.0",
+	"PrimaryCriteria" : {
+		"CriteriaList" : [
+			{
+				"DrugExposure" : {
+					"CodesetId" : 7,
+					"DrugTypeExclude" : false
+				}
+			}
+		],
+		"ObservationWindow" : {
+			"PriorDays" : 0,
+			"PostDays" : 0
+		},
+		"PrimaryCriteriaLimit" : {
+			"Type" : "First"
+		}
+	},
+	"ConceptSets" : [
+		{
+			"id" : 7,
+			"name" : "[AK] Triptorelin_local",
+			"expression" : {
+				"items" : [
+					{
+						"concept" : {
+							"CONCEPT_ID" : 722906,
+							"CONCEPT_NAME" : "Inj, triptorelin ext rel",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "9016",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "APC",
+							"CONCEPT_CLASS_ID" : "APC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 821571,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "969bdcdc-10c1-e7ac-9588-4d422859c69d",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 912113,
+							"CONCEPT_NAME" : "Triptorelin and RT",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "27986",
+							"DOMAIN_ID" : "Regimen",
+							"VOCABULARY_ID" : "HemOnc",
+							"CONCEPT_CLASS_ID" : "Regimen"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 953181,
+							"CONCEPT_NAME" : "Injection, triptorelin, extended-release, 3.75 mg",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "J3316",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "HCPCS",
+							"CONCEPT_CLASS_ID" : "HCPCS"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 973992,
+							"CONCEPT_NAME" : "triptorelin KIT [triptodur]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "69eaa838-65f3-4939-88d0-e7c065a1a756",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 1373045,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "3fb6da6f-358a-43df-a9a7-ae3989e3fa5e",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 1602824,
+							"CONCEPT_NAME" : "TRIPTORELIN",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4021400",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VANDF",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 1602825,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4021401",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VANDF",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 1612993,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE (PEDIATRIC) 22.5MG/KIT INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4037484",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VANDF",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 2718622,
+							"CONCEPT_NAME" : "Injection, triptorelin pamoate, 3.75 mg",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "J3315",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "HCPCS",
+							"CONCEPT_CLASS_ID" : "HCPCS"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3172736,
+							"CONCEPT_NAME" : "Triptorelin pamoate 11.25mg/vial lyophilized powder for conventional release suspension for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "766691004",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3177079,
+							"CONCEPT_NAME" : "Triptorelin pamoate 3.75mg/vial lyophilized powder for conventional release suspension for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "766692006",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3181234,
+							"CONCEPT_NAME" : "Triptorelin pamoate 22.5mg lyophilized powder for injection suspension",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "445491003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3193726,
+							"CONCEPT_NAME" : "Triptorelin acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "425731006",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3196294,
+							"CONCEPT_NAME" : "Triptorelin embonate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "427385009",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3196651,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "395915003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3205873,
+							"CONCEPT_NAME" : "Product containing precisely triptorelin (as triptorelin acetate) 3 milligram/1 vial powder for conventional release suspension for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769121005",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3207026,
+							"CONCEPT_NAME" : "Triptorelin product",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "327370004",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3207948,
+							"CONCEPT_NAME" : "Product containing precisely triptorelin 11.25 milligram/1 vial powder for conventional release suspension for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769122003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3211294,
+							"CONCEPT_NAME" : "Product containing precisely triptorelin (as triptorelin acetate) 3.75 milligram/1 syringe powder for conventional release suspension for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769129007",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3479775,
+							"CONCEPT_NAME" : "Triptorelin adverse reaction",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "293281005",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Clinical Finding"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 3481137,
+							"CONCEPT_NAME" : "Triptorelin allergy",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "294819000",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "Nebraska Lexicon",
+							"CONCEPT_CLASS_ID" : "Clinical Finding"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4137521,
+							"CONCEPT_NAME" : "Triptorelin acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "425731006",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4146283,
+							"CONCEPT_NAME" : "Triptorelin pamoate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "427385009",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4164112,
+							"CONCEPT_NAME" : "Triptorelin adverse reaction",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "293281005",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Finding"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4169049,
+							"CONCEPT_NAME" : "Allergy to triptorelin",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "294819000",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Finding"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4211281,
+							"CONCEPT_NAME" : "Triptorelin-containing product",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "327370004",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4213832,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "395915003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4272891,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000148819",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDFRT",
+							"CONCEPT_CLASS_ID" : "Pharma Preparation"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4333866,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000010359",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDFRT",
+							"CONCEPT_CLASS_ID" : "Chemical Structure"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 4336364,
+							"CONCEPT_NAME" : "TRIPTORELIN",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000148818",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDFRT",
+							"CONCEPT_CLASS_ID" : "Pharma Preparation"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 19056346,
+							"CONCEPT_NAME" : "triptorelin acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "236538",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "RxNorm",
+							"CONCEPT_CLASS_ID" : "Precise Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 19093370,
+							"CONCEPT_NAME" : "triptorelin pamoate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "338529",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "RxNorm",
+							"CONCEPT_CLASS_ID" : "Precise Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21234506,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "395915003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21235644,
+							"CONCEPT_NAME" : "Triptorelin embonate 22.5mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "18496811000001106",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21244430,
+							"CONCEPT_NAME" : "Triptorelin acetate 3.75mg powder and solvent for suspension for injection pre-filled syringes 1 pre-filled disposable injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "5614711000001100",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMPP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21262888,
+							"CONCEPT_NAME" : "Triptorelin 11.25mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "8172711000001105",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMPP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21280455,
+							"CONCEPT_NAME" : "Triptorelin embonate 22.5mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "18478511000001101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMPP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21281915,
+							"CONCEPT_NAME" : "Triptorelin acetate 3mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4146411000001103",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMPP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 21603827,
+							"CONCEPT_NAME" : "triptorelin; parenteral",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "L02AE04",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "ATC",
+							"CONCEPT_CLASS_ID" : "ATC 5th"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 35625995,
+							"CONCEPT_NAME" : "Triptorelin (as triptorelin acetate) 3 mg powder for suspension for injection vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769121005",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 35625996,
+							"CONCEPT_NAME" : "Triptorelin 11.25 mg powder for suspension for injection vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769122003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 35625999,
+							"CONCEPT_NAME" : "Triptorelin (as triptorelin acetate) 3.75 mg powder for suspension for injection syringe",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "769129007",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 35803367,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "518",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "HemOnc",
+							"CONCEPT_CLASS_ID" : "Component"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 35824560,
+							"CONCEPT_NAME" : "triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4-1140921100",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "UK Biobank",
+							"CONCEPT_CLASS_ID" : "Value"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36130381,
+							"CONCEPT_NAME" : "triptorelin KIT [triptodur]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "d57ef4e7-4a31-4fe3-b0a0-fff64e4c5cad",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36173585,
+							"CONCEPT_NAME" : "triptorelin pamoate 22.5mg/2mL / 3.75mg/2mL / 11.25mg/2mL INTRAMUSCULAR INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION, KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "ca48e55a-17dd-49b8-9313-350b3ffe8cdd",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36199292,
+							"CONCEPT_NAME" : "triptorelin KIT [triptodur]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "e998c082-638a-4e48-b42d-71bf0cae0536",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36287348,
+							"CONCEPT_NAME" : "triptoreline embonaat",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "stof01787",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GGR",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36289226,
+							"CONCEPT_NAME" : "triptoreline pamoaat",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "stof01788",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GGR",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36289302,
+							"CONCEPT_NAME" : "triptoreline",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "stof01785",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GGR",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36298445,
+							"CONCEPT_NAME" : "triptoreline acetaat",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "stof01786",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GGR",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36467650,
+							"CONCEPT_NAME" : "triptorelin KIT [triptodur]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "6b10d29b-1794-485d-b85f-a617c51f1823",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36496554,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Triptodur]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "24338015001",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36498100,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Triptodur]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "24338015020",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36618778,
+							"CONCEPT_NAME" : "Triptorelin 0.1mg / Ml",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "302534",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36620907,
+							"CONCEPT_NAME" : "Injection 3.75 Mg Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108513",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36621731,
+							"CONCEPT_NAME" : "0.1 Mg Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "300900",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36623961,
+							"CONCEPT_NAME" : "Triptorelin 0.1 Mg [Dafeilin]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108496",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36628977,
+							"CONCEPT_NAME" : "Triptorelin Injection [Dabijia]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108516",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36630822,
+							"CONCEPT_NAME" : "Triptorelin 0.1mg / Ml [Dabijia]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108502",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36636188,
+							"CONCEPT_NAME" : "Triptorelin Injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "303619",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36636691,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "100539",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36641214,
+							"CONCEPT_NAME" : "Triptorelin Injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108511",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36641913,
+							"CONCEPT_NAME" : "3.75 Mg Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "300901",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36644364,
+							"CONCEPT_NAME" : "3.75 Mg Triptorelin [Dabijia]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108498",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36645697,
+							"CONCEPT_NAME" : "Triptorelin Api",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "108506",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36658738,
+							"CONCEPT_NAME" : "Triptorelin Acetate 0.1mg / Ml",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "300902",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NCCD",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36676201,
+							"CONCEPT_NAME" : "Triptorelin-containing product in parenteral dose form",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "772764009",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Drug Form"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36680447,
+							"CONCEPT_NAME" : "Triptorelin only product",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "777868006",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36683151,
+							"CONCEPT_NAME" : "Triptorelin only product in parenteral dose form",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "780721002",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Clinical Drug Form"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36691559,
+							"CONCEPT_NAME" : "Triptorelin 11.25mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145111000001106",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36691561,
+							"CONCEPT_NAME" : "Triptorelin acetate 3.75mg powder and solvent for suspension for injection pre-filled syringes",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145311000001108",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36691562,
+							"CONCEPT_NAME" : "Triptorelin acetate 3mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145411000001101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36818046,
+							"CONCEPT_NAME" : "Triptorelin 11.25mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145111000001106",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36818047,
+							"CONCEPT_NAME" : "Triptorelin acetate 3.75mg powder and solvent for suspension for injection pre-filled syringes",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145311000001108",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 36818048,
+							"CONCEPT_NAME" : "Triptorelin acetate 3mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "36145411000001101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "dm+d",
+							"CONCEPT_CLASS_ID" : "VMP"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37488818,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "57773-63-4",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "CTD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37492791,
+							"CONCEPT_NAME" : "Triptorelin Pamoate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "124508-66-3",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "CTD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37493043,
+							"CONCEPT_NAME" : "Triptorelin Acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "140194-24-7",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "CTD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37504076,
+							"CONCEPT_NAME" : "TRELSTAR - triptorelin pamoate kit",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "b1b84d62-a369-a4b7-5c41-dd1f553a18f3",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37505572,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "6fe2864e-3e5f-c4c5-498f-98cbabd3b3bd",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37508830,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "746765902",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37508831,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "746765904",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37508832,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "746765906",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37514096,
+							"CONCEPT_NAME" : "triptorelin 3.75 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590201",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37514097,
+							"CONCEPT_NAME" : "triptorelin 11.25 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590401",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 37514098,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590601",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 38002840,
+							"CONCEPT_NAME" : "Triptorelin pamoate",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "9122",
+							"DOMAIN_ID" : "Observation",
+							"VOCABULARY_ID" : "APC",
+							"CONCEPT_CLASS_ID" : "APC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 40205567,
+							"CONCEPT_NAME" : "Triptorelin Pamoate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000179768",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDFRT",
+							"CONCEPT_CLASS_ID" : "Chemical Structure"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 40483809,
+							"CONCEPT_NAME" : "Triptorelin (as triptorelin pamoate) 22.5 mg lyophilized powder for suspension for injection vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "445491003",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42378313,
+							"CONCEPT_NAME" : "triptorelin acetate (as triptorelin 3.75mg)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "652500021",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "EDI",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42378314,
+							"CONCEPT_NAME" : "triptorelin acetate (as triptorelin 3.75mg)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "681400031",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "EDI",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42378315,
+							"CONCEPT_NAME" : "triptorelin acetate 0.105mg(0.105mg/mL)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "652500031",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "EDI",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42383225,
+							"CONCEPT_NAME" : "triptorelin pamoate (as triptorelin 11.25mg)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "681400041",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "EDI",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42383226,
+							"CONCEPT_NAME" : "triptorelin pamoate (as triptorelin 22.5mg)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "681400141",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "EDI",
+							"CONCEPT_CLASS_ID" : "Drug Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42542446,
+							"CONCEPT_NAME" : "Triptorelin monotherapy",
+							"STANDARD_CONCEPT" : "S",
+							"STANDARD_CONCEPT_CAPTION" : "Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "54242",
+							"DOMAIN_ID" : "Regimen",
+							"VOCABULARY_ID" : "HemOnc",
+							"CONCEPT_CLASS_ID" : "Regimen"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42848799,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "01e0db8c-7e5b-4c90-a396-a1ade97ccb9c",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42850922,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 3.75MG/KIT INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000177486",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42850923,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 3.75MG/VIL INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000177485",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42861304,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 22.5MG/KIT INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000182007",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42861478,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 11.25MG/VIL INJ",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000164389",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42861479,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 11.25MG/VIL INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000164391",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42861480,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 11.25MG/KIT INJ,SUSP,SA",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "N0000164390",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "VA Product",
+							"CONCEPT_CLASS_ID" : "VA Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 42868285,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "935a48d7-3602-41a1-8f85-8063b1f2ca7d",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43006131,
+							"CONCEPT_NAME" : "triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "KDC1709",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "KDC",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43006132,
+							"CONCEPT_NAME" : "triptorelin acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "KDC1330",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "KDC",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43048893,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "06197",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "BDPM",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43307550,
+							"CONCEPT_NAME" : "Triptorelin",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "32098011000036102",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "AU Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43307551,
+							"CONCEPT_NAME" : "Triptorelin 11.25 Mg Injection, Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "52805011000036101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43307552,
+							"CONCEPT_NAME" : "Triptorelin 3.75 Mg Injection, Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "52804011000036100",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43309259,
+							"CONCEPT_NAME" : "Diphereline (Triptorelin 11.25 Mg) Powder For Injection, 11.25 Mg Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "52401011000036108",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Trade Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43316511,
+							"CONCEPT_NAME" : "Triptorelin 22.5 Mg Injection, Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "922101011000036100",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43325544,
+							"CONCEPT_NAME" : "Triptorelin Acetate 100 Microgram/Ml Injection, Syringe",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "729001000168108",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43327315,
+							"CONCEPT_NAME" : "Diphereline (Triptorelin 22.5 Mg) Powder For Injection, 22.5 Mg Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "921024011000036101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Trade Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43336330,
+							"CONCEPT_NAME" : "Diphereline (Triptorelin 3.75 Mg) Powder For Injection, 3.75 Mg Vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "52405011000036105",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Trade Product Unit"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43343563,
+							"CONCEPT_NAME" : "Triptorelin Acetate 100 Microgram/Ml Injection, 7 X 1 Ml Syringes",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "778611000168105",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Pack"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43352641,
+							"CONCEPT_NAME" : "Triptorelin Acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "728991000168108",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "AU Substance"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43361602,
+							"CONCEPT_NAME" : "Triptorelin Acetate 100 Microgram/Ml Injection, 28 X 1 Ml Syringes",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "729021000168104",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "AMT",
+							"CONCEPT_CLASS_ID" : "Med Product Pack"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43547803,
+							"CONCEPT_NAME" : "triptorelin 3.75 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590200",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43547804,
+							"CONCEPT_NAME" : "triptorelin 11.25 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590400",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 43547805,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "74676590600",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44141668,
+							"CONCEPT_NAME" : "Triptorelin Pamoate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "DPD136646",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "DPD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44154627,
+							"CONCEPT_NAME" : "Triptorelin Acetate",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "DPD136645",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "DPD",
+							"CONCEPT_CLASS_ID" : "Ingredient"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44341786,
+							"CONCEPT_NAME" : "TRELSTAR - triptorelin pamoate kit",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "75df146d-f7a1-424e-b308-46389150ecd6",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44349834,
+							"CONCEPT_NAME" : "TRIPTODUR - triptorelin kit",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "f41380e7-b830-432d-a5f5-a872932f107e",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44371471,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "2fafba3a-f920-439c-a39a-efa83712e6c1",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44403374,
+							"CONCEPT_NAME" : "triptorelin KIT [triptodur]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "d68b309b-41fb-4055-a3f4-4c405ac491df",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44415698,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590622",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44422549,
+							"CONCEPT_NAME" : "triptorelin 3.75 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590203",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44425251,
+							"CONCEPT_NAME" : "triptorelin 11.25 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590411",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44442993,
+							"CONCEPT_NAME" : "triptorelin 22.5 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590623",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44444376,
+							"CONCEPT_NAME" : "triptorelin 11.25 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590412",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44448478,
+							"CONCEPT_NAME" : "triptorelin 3.75 MG Injection [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "00023590204",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "11-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44467193,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "000235902",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44467194,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "000235904",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44467195,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "000235906",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44472224,
+							"CONCEPT_NAME" : "triptorelin KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "243380150",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 44928158,
+							"CONCEPT_NAME" : "triptorelin pamoate 22.5 mg/2mL INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544156",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45183367,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544188",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45251957,
+							"CONCEPT_NAME" : "triptorelin pamoate 3.75 mg/2mL INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544153",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45269105,
+							"CONCEPT_NAME" : "triptorelin pamoate 11.25 mg/2mL INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544154",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45286140,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544189",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45354275,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT [Trelstar]",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "052544092",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45415191,
+							"CONCEPT_NAME" : "triptorelin 22.5 mg/6 months intramuscular powder for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "26178",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Multum",
+							"CONCEPT_CLASS_ID" : "Multum"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45418243,
+							"CONCEPT_NAME" : "triptorelin 3.75 mg intramuscular powder for injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "7729",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "Multum",
+							"CONCEPT_CLASS_ID" : "Multum"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45700820,
+							"CONCEPT_NAME" : "TRELSTAR - triptorelin pamoate injection, powder, lyophilized, for suspension",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "a2f71c34-4493-4d58-9c23-f8543babe95f",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45710419,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 11.25 mg/2 mL INTRAMUSC SYRINGE (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "064052",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45712599,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 3.75 mg INTRAMUSC VIAL (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "049720",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45716056,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 22.5 mg/2 mL INTRAMUSC SYRINGE (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "066265",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45716057,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 22.5 mg INTRAMUSC VIAL (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "066266",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45723593,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 11.25 mg INTRAMUSC VIAL (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "049718",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45729683,
+							"CONCEPT_NAME" : "TRIPTORELIN PAMOATE 3.75 mg/2 mL INTRAMUSC SYRINGE (EA)",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "064053",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "GCN_SEQNO",
+							"CONCEPT_CLASS_ID" : "GCN_SEQNO"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45777911,
+							"CONCEPT_NAME" : "triptorelin pamoate 22.5mg/2mL / 3.75mg/2mL / 11.25mg/2mL INTRAMUSCULAR INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION, KIT [trelstar]",
+							"STANDARD_CONCEPT" : "C",
+							"STANDARD_CONCEPT_CAPTION" : "Classification",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "02d5978a-ae60-48d9-9640-544ced251ce3",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SPL",
+							"CONCEPT_CLASS_ID" : "Prescription Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833070,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440092",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833075,
+							"CONCEPT_NAME" : "triptorelin pamoate 3.75mg/2mL INTRAMUSCULAR INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440153",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833076,
+							"CONCEPT_NAME" : "triptorelin pamoate 11.25mg/2mL INTRAMUSCULAR INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440154",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833077,
+							"CONCEPT_NAME" : "triptorelin pamoate 22.5mg/2mL INTRAMUSCULAR INJECTION, POWDER, LYOPHILIZED, FOR SUSPENSION",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440156",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833083,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440188",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45833084,
+							"CONCEPT_NAME" : "triptorelin pamoate KIT",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "525440189",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "NDC",
+							"CONCEPT_CLASS_ID" : "9-digit NDC"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45923941,
+							"CONCEPT_NAME" : "TRIPTORELIN ACETATE",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "85551",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "CIEL",
+							"CONCEPT_CLASS_ID" : "Drug"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 45963180,
+							"CONCEPT_NAME" : "Triptorelin embonate 22.5mg powder and solvent for suspension for injection vials",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "18496811000001106",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 46083776,
+							"CONCEPT_NAME" : "Triptorelin embonate 22.5mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "18478511000001101",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 46094428,
+							"CONCEPT_NAME" : "Triptorelin 11.25mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "8172711000001105",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 46096565,
+							"CONCEPT_NAME" : "Triptorelin acetate 3.75mg powder and solvent for suspension for injection pre-filled syringes 1 pre-filled disposable injection",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "5614711000001100",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					},
+					{
+						"concept" : {
+							"CONCEPT_ID" : 46099187,
+							"CONCEPT_NAME" : "Triptorelin acetate 3mg powder and solvent for suspension for injection vials 1 vial",
+							"STANDARD_CONCEPT" : "N",
+							"STANDARD_CONCEPT_CAPTION" : "Non-Standard",
+							"INVALID_REASON" : "V",
+							"INVALID_REASON_CAPTION" : "Valid",
+							"CONCEPT_CODE" : "4146411000001103",
+							"DOMAIN_ID" : "Drug",
+							"VOCABULARY_ID" : "SNOMED",
+							"CONCEPT_CLASS_ID" : "Pharma/Biol Product"
+						},
+						"isExcluded" : false,
+						"includeDescendants" : true,
+						"includeMapped" : false
+					}
+				]
+			}
+		}
+	],
+	"QualifiedLimit" : {
+		"Type" : "First"
+	},
+	"ExpressionLimit" : {
+		"Type" : "First"
+	},
+	"InclusionRules" : [],
+	"EndStrategy" : {
+		"CustomEra" : {
+			"DrugCodesetId" : 7,
+			"GapDays" : 100,
+			"Offset" : 90
+		}
+	},
+	"CensoringCriteria" : [],
+	"CollapseSettings" : {
+		"CollapseType" : "ERA",
+		"EraPad" : 0
+	},
+	"CensorWindow" : {}
+}
