@@ -27,10 +27,14 @@ Imports:
     dplyr (>= 1.1.0),
     readr (>= 2.1.0),
     survival (>= 3.5.0),
-    DescTools (>=0.99.60)
+    DescTools (>=0.99.60),
+    TreatmentPatterns
 Suggests:
     CohortGenerator (>= 0.9.0),
     ROhdsiWebApi (>= 1.3.0),
     OhdsiShinyModules,
     roxygen2
+Remotes:
+    mi-erasmusmc/TreatmentPatterns@171b60af7e76f63e09f2c2d48e2b811ce1dafff0,
+    OHDSI/OhdsiSharing
 Config/roxygen2/version: 8.0.0

@@ -50,6 +50,13 @@ combinationTreatmentCohortIds <- c(
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
 outcomeCohortIds <- c(1688, 1689, 1690, 1691)
 
+# Treatment event cohorts for the treatment patterns analysis.
+# IDs only — names come from CohortsToCreate.csv. Use the INDIVIDUAL treatment
+# cohorts (each agent: triptorelin, other ADT, ARPI, chemo, ...), NOT the
+# pre-combined regimen cohorts 1752-1755 — TreatmentPatterns builds combinations
+# itself. These must already exist in CohortsToCreate.csv and be generated.
+TreatmentCohortIds <- c()   # e.g. c(1751, 1699, 1702, 1703)
+
 # CV comparison cohorts (fill in if runCvComparison = TRUE)
 withCvCohortId    <- NA_integer_   # triptorelin patients WITH prior CV history
 withoutCvCohortId <- NA_integer_   # triptorelin patients WITHOUT prior CV history
@@ -79,6 +86,7 @@ runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
 runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
 runSwitchingAnalysis       <- FALSE   # KM for switching to alternative ADT
+runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
 
 # ------------------------------------------------------------------------------
 # 3. Execute
@@ -99,6 +107,7 @@ execute(
   triptorelinCohortId              = triptorelinCohortId,
   combinationTreatmentCohortIds    = combinationTreatmentCohortIds,
   outcomeCohortIds                 = outcomeCohortIds,
+  eventCohortIds                   = TreatmentCohortIds,
   minCellCount                 = minCellCount,
   runCreateCohorts             = runCreateCohorts,
   runBaselineCharacteristics   = runBaselineCharacteristics,
@@ -108,5 +117,13 @@ execute(
   withoutCvCohortId            = withoutCvCohortId,
   cvOutcomeCohortIds           = cvOutcomeCohortIds,
   runCvComparison              = runCvComparison,
-  runSwitchingAnalysis         = runSwitchingAnalysis
+  runSwitchingAnalysis         = runSwitchingAnalysis,
+  runTreatmentPatterns         = runTreatmentPatterns
 )
+
+# ------------------------------------------------------------------------------
+# 4. Visualise treatment patterns (run manually after execute() completes)
+# ------------------------------------------------------------------------------
+# TreatmentPatterns::launchResultsExplorer(
+#   outputFolder = file.path(outputFolder, "treatmentPatterns", "output")
+# )

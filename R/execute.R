@@ -41,6 +41,13 @@
 #' @param runCvComparison            Logical. Compare CV outcomes between with/without CV history
 #'   groups using PS-matched Cox PH via CohortMethod.
 #' @param runSwitchingAnalysis       Logical. Run KM for switching to alternative ADT.
+#' @param eventCohortIds             Integer vector of treatment event cohort IDs passed to
+#'   \code{runTreatmentPatterns}. Should be the INDIVIDUAL treatment cohorts (each agent),
+#'   not the pre-combined regimen cohorts. \code{NA} entries are silently skipped.
+#'   Cohort names are resolved from \code{inst/settings/CohortsToCreate.csv}.
+#' @param runTreatmentPatterns       Logical. Describe real-world treatment sequences and
+#'   combinations via the TreatmentPatterns package. Never launches Shiny; output is
+#'   written for \code{TreatmentPatterns::launchResultsExplorer}.
 #'
 #' @export
 execute <- function(connectionDetails,
@@ -58,6 +65,7 @@ execute <- function(connectionDetails,
                     triptorelinCohortId,
                     combinationTreatmentCohortIds,
                     outcomeCohortIds,
+                    eventCohortIds,
                     minCellCount                 = 5,
                     withCvCohortId,
                     withoutCvCohortId,
@@ -67,7 +75,8 @@ execute <- function(connectionDetails,
                     runUtilisationAnalysis       = TRUE,
                     runSafetyAnalysis            = TRUE,
                     runCvComparison              = TRUE,
-                    runSwitchingAnalysis         = TRUE) {
+                    runSwitchingAnalysis         = TRUE,
+                    runTreatmentPatterns         = TRUE) {
 
   if (!dir.exists(outputFolder)) {
     dir.create(outputFolder, recursive = TRUE)
@@ -239,6 +248,27 @@ execute <- function(connectionDetails,
       cohortDatabaseSchema = cohortDatabaseSchema,
       cohortTable          = cohortTable,
       databaseId           = databaseId,
+      outputFolder         = outputFolder
+    )
+  }
+
+  # ----------------------------------------------------------------------------
+  # Step 7: Treatment patterns analysis (TreatmentPatterns)
+  #   Real-world treatment sequences and combinations around triptorelin.
+  #   Output only — never launches Shiny; view with launchResultsExplorer().
+  # ----------------------------------------------------------------------------
+  if (runTreatmentPatterns) {
+    ParallelLogger::logInfo("Step 7: Running treatment patterns analysis")
+    runTreatmentPatterns(
+      connectionDetails    = connectionDetails,
+      cdmDatabaseSchema    = cdmDatabaseSchema,
+      cohortDatabaseSchema = cohortDatabaseSchema,
+      cohortTable          = cohortTable,
+      targetCohortId       = triptorelinCohortId,
+      eventCohortIds       = eventCohortIds,
+      databaseId           = databaseId,
+      databaseName         = databaseName,
+      minCellCount         = minCellCount,
       outputFolder         = outputFolder
     )
   }
