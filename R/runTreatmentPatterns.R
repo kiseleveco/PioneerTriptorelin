@@ -88,6 +88,7 @@ runTreatmentPatterns <- function(connectionDetails,
                                  maxPathLength              = 5,
                                  addNoPaths                 = FALSE) {
 
+  library(TreatmentPatterns)
   tpFolder <- file.path(outputFolder, "treatmentPatterns")
   if (!dir.exists(tpFolder)) {
     dir.create(tpFolder, recursive = TRUE)
@@ -148,12 +149,14 @@ runTreatmentPatterns <- function(connectionDetails,
     cohortTable          = cohortTable
   )
 
-  cohortSettings <- TreatmentPatterns::createCohortSettings(
-    targetCohorts   = targetCohorts,
-    eventCohorts    = eventCohorts,
-    loadCohorts     = FALSE,
-    generateCohorts = FALSE
-  )
+
+  cohortSettings <-
+    createCohortSettings(
+      cohortsToCreate_location =
+        file.path(system.file(package = "PioneerTriptorelin"),
+                  "settings", "CohortsToCreate.csv"),
+      cohortsFolder = file.path(system.file(package = "PioneerTriptorelin"),
+                                "cohorts"))
 
   # createPathwaySettings() takes a list of one-or-more addPathwaySettings() rows
   pathwaySettings <- TreatmentPatterns::createPathwaySettings(

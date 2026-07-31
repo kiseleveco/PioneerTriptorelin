@@ -79,11 +79,11 @@ maxCores <- parallel::detectCores()
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
 incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
-includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
-runCreateCohorts           <- TRUE
+includeCohortStats         <- FALSE  # TRUE = export inclusion rule statistics to cohortStatistics/
+runCreateCohorts           <- FALSE
 runBaselineCharacteristics <- FALSE
-runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
-runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
+runUtilisationAnalysis     <- FALSE   # primary: depot formulation + regimen mix
+runSafetyAnalysis          <- FALSE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
 runSwitchingAnalysis       <- FALSE   # KM for switching to alternative ADT
 runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
