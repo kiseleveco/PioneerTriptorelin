@@ -101,6 +101,14 @@ runTreatmentPatterns <- function(connectionDetails,
   csvFolder <- file.path(tpFolder, "output")
   dir.create(csvFolder, recursive = TRUE, showWarnings = FALSE)
 
+  # Redshift (and similar): native #temp-table CTAS fails through the
+  # CDMConnector / DatabaseConnector write path (java.util.NoSuchElementException),
+  # while permanent-table CTAS works. Route temp tables through emulation into
+  # the writable cohort schema for the duration of this step, then restore.
+  oldTempEmulation <- getOption("sqlRenderTempEmulationSchema")
+  options(sqlRenderTempEmulationSchema = cohortDatabaseSchema)
+  on.exit(options(sqlRenderTempEmulationSchema = oldTempEmulation), add = TRUE)
+
   # --------------------------------------------------------------------------
   # Resolve cohort names from CohortsToCreate.csv (IDs are the single source
   # of truth; names are looked up for labelling only)
