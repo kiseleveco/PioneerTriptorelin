@@ -122,8 +122,11 @@ execute(
 )
 
 # ------------------------------------------------------------------------------
-# 4. Visualise treatment patterns (run manually after execute() completes)
+# 4. Visualise treatment patterns  (TreatmentPatterns v3.x — no launchResultsExplorer)
 # ------------------------------------------------------------------------------
-# TreatmentPatterns::launchResultsExplorer(
-#   outputFolder = file.path(outputFolder, "treatmentPatterns", "output")
-# )
+# The treatment patterns step writes to <outputFolder>/treatmentPatterns/:
+#   - output/        shareable aggregate CSV files (from export())
+#   - sunburst.html  standalone interactive sunburst plot
+#   - sankey.html    standalone interactive Sankey diagram
+# Open the .html files in a browser. To recompute plots interactively, capture
+# the results object:  res <- runTreatmentPatterns(...); res$plotSankey()
