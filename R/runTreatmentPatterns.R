@@ -148,14 +148,31 @@ runTreatmentPatterns <- function(connectionDetails,
 
   # --------------------------------------------------------------------------
   # 1. Construct pathways from the existing cohort table
+  #
+  # computePathways(connectionDetails = ) references the cohort table by BARE
+  # name — dplyr::tbl(con, cohortTableName) — with no schema, so on schema-based
+  # platforms it fails (e.g. Redshift: relation "cohort2" does not exist).
+  # Build the CDMConnector cdm ourselves and register the cohort table WITH its
+  # schema, then pass cdm = (which makes computePathways skip that bare
+  # reference and use ours).
   # --------------------------------------------------------------------------
+  con <- DatabaseConnector::connect(connectionDetails)
+  on.exit(DatabaseConnector::disconnect(con), add = TRUE)
+
+  cdm <- CDMConnector::cdmFromCon(
+    con         = con,
+    cdmSchema   = cdmDatabaseSchema,
+    writeSchema = cohortDatabaseSchema
+  )
+  cdm[[cohortTable]] <- dplyr::tbl(
+    con,
+    CDMConnector::inSchema(schema = cohortDatabaseSchema, table = cohortTable)
+  )
+
   andromeda <- TreatmentPatterns::computePathways(
     cohorts                    = cohorts,
     cohortTableName            = cohortTable,
-    connectionDetails          = connectionDetails,
-    cdmSchema                  = cdmDatabaseSchema,
-    resultSchema               = cohortDatabaseSchema,
-    tempEmulationSchema        = getOption("sqlRenderTempEmulationSchema"),
+    cdm                        = cdm,
     analysisId                 = 1,
     description                = databaseName,
     minEraDuration             = minEraDuration,
