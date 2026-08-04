@@ -17,32 +17,24 @@
 #' Run treatment patterns analysis
 #'
 #' Describes the real-world sequence of therapies around triptorelin initiation
-#' using the \pkg{TreatmentPatterns} package (CRAN v3.1.2 API:
-#' \code{computePathways()} + \code{export()}). The target cohort is the
-#' triptorelin cohort; the event cohorts are the individual treatments whose
-#' sequences and combinations are traced.
+#' using the \pkg{TreatmentPatterns} package (mi-erasmusmc, v1.0.0 settings-object
+#' API). The target cohort is the triptorelin cohort; the event cohorts are the
+#' individual treatments whose sequences and combinations are traced.
 #'
 #' Cohorts are NOT re-generated here: this function reuses the cohorts already
 #' instantiated in \code{cohortTable} by \code{generateStudyCohorts()}. The
 #' target cohort and every cohort in \code{eventCohortIds} must already exist in
 #' that table.
 #'
-#' Output is written to \code{outputFolder/treatmentPatterns}:
-#' \itemize{
-#'   \item \code{output/} — shareable aggregate CSV files from \code{export()}.
-#'   \item \code{sunburst.html}, \code{sankey.html} — standalone interactive
-#'     plots (best effort; requires \pkg{htmlwidgets}).
-#' }
-#' The \code{export()} results object is returned invisibly so it can be plotted
-#' interactively with \code{results$plotSunburst()} / \code{results$plotSankey()}.
+#' This function NEVER launches the Shiny app. It only writes the pathway output
+#' to \code{outputFolder/treatmentPatterns/output}. Visualise it afterwards with
+#' \code{TreatmentPatterns::launchResultsExplorer(outputFolder = ...)}.
 #'
 #' @param connectionDetails    DatabaseConnector connection details object.
-#' @param cdmDatabaseSchema    Schema containing the OMOP CDM tables (read-only),
-#'   passed to \code{computePathways(cdmSchema = )}.
-#' @param cohortDatabaseSchema Schema holding the cohort table, passed to
-#'   \code{computePathways(resultSchema = )}.
-#' @param cohortTable          Name of the (already-generated) cohort table,
-#'   passed to \code{computePathways(cohortTableName = )}.
+#' @param cdmDatabaseSchema    Schema containing the OMOP CDM tables (read-only).
+#' @param cohortDatabaseSchema Schema where cohort tables are written; also used
+#'   by TreatmentPatterns for its intermediate storage.
+#' @param cohortTable          Name of the (already-generated) cohort table.
 #' @param targetCohortId       Integer. Cohort definition ID of the triptorelin
 #'   target cohort. Its name is resolved from
 #'   \code{inst/settings/CohortsToCreate.csv}.
@@ -52,13 +44,12 @@
 #'   pre-combined regimen cohorts, since TreatmentPatterns constructs combinations
 #'   itself. Names are resolved from \code{inst/settings/CohortsToCreate.csv}.
 #' @param databaseId           Short site identifier used to label outputs.
-#' @param databaseName         Human-readable database name used as the analysis
-#'   \code{description}.
-#' @param minCellCount         Minimum count for a pathway to be reported;
-#'   smaller counts are censored per \code{censorType = "minCellCount"}. Default 5.
+#' @param databaseName         Human-readable database name shown in the results.
+#' @param minCellCount         Minimum count for a pathway to be reported; smaller
+#'   counts are handled per \code{minCellMethod} ("Remove"). Default 5.
 #' @param outputFolder         Path where result files will be written.
-#' @param studyName            Label for this pathway analysis (used in logs).
-#'   Default "TriptorelinTreatmentPatterns".
+#' @param studyName            Label for this pathway analysis. Default
+#'   "TriptorelinTreatmentPatterns".
 #' @param minEraDuration       Minimum days a treatment era must last to be kept.
 #'   Shorter eras are dropped as noise. Default 0.
 #' @param eraCollapseSize      Two eras of the SAME treatment separated by a gap of
@@ -74,8 +65,8 @@
 #'   "All" (every era). Default "First".
 #' @param maxPathLength        Maximum number of steps shown in a pathway
 #'   (package maximum 5). Default 5.
-#' @param addNoPaths           Include untreated persons as a "None" pathway,
-#'   passed to \code{export(nonePaths = )}. Default FALSE.
+#' @param addNoPaths           Include untreated persons as an empty pathway.
+#'   Default FALSE.
 #'
 #' @export
 runTreatmentPatterns <- function(connectionDetails,
@@ -97,17 +88,11 @@ runTreatmentPatterns <- function(connectionDetails,
                                  maxPathLength              = 5,
                                  addNoPaths                 = FALSE) {
 
-  tpFolder  <- file.path(outputFolder, "treatmentPatterns")
-  csvFolder <- file.path(tpFolder, "output")
-  dir.create(csvFolder, recursive = TRUE, showWarnings = FALSE)
-
-  # Redshift (and similar): native #temp-table CTAS fails through the
-  # CDMConnector / DatabaseConnector write path (java.util.NoSuchElementException),
-  # while permanent-table CTAS works. Route temp tables through emulation into
-  # the writable cohort schema for the duration of this step, then restore.
-  oldTempEmulation <- getOption("sqlRenderTempEmulationSchema")
-  options(sqlRenderTempEmulationSchema = cohortDatabaseSchema)
-  on.exit(options(sqlRenderTempEmulationSchema = oldTempEmulation), add = TRUE)
+  library(TreatmentPatterns)
+  tpFolder <- file.path(outputFolder, "treatmentPatterns")
+  if (!dir.exists(tpFolder)) {
+    dir.create(tpFolder, recursive = TRUE)
+  }
 
   # --------------------------------------------------------------------------
   # Resolve cohort names from CohortsToCreate.csv (IDs are the single source
@@ -131,109 +116,135 @@ runTreatmentPatterns <- function(connectionDetails,
   }
 
   # --------------------------------------------------------------------------
-  # cohorts data frame for computePathways(): columns cohortId, cohortName, type
-  #   type = "target" for the triptorelin cohort, "event" for each treatment
+  # Target / event cohort tables (cohortId + cohortName) for TreatmentPatterns
   # --------------------------------------------------------------------------
-  cohorts <- rbind(
+  targetCohorts <- data.frame(
+    cohortId   = targetCohortId,
+    cohortName = .cohortName(targetCohortId),
+    stringsAsFactors = FALSE
+  )
+  eventCohorts <- data.frame(
+    cohortId   = validEventIds,
+    cohortName = vapply(validEventIds, .cohortName, character(1)),
+    stringsAsFactors = FALSE
+  )
+
+  ParallelLogger::logInfo(
+    "Treatment patterns: target ", .cohortName(targetCohortId),
+    " (", targetCohortId, "); ", nrow(eventCohorts), " event cohorts."
+  )
+
+  # --------------------------------------------------------------------------
+  # Assemble TreatmentPatterns settings objects
+  #   - Data: reuse the existing, already-generated cohort table
+  #   - Cohort: no generation / no loading (cohorts already instantiated)
+  #   - Pathway: era / combination / filtering parameters
+  #   - Save: output + temp folders under treatmentPatterns/
+  # --------------------------------------------------------------------------
+  dataSettings <- TreatmentPatterns::createDataSettings(
+    OMOP_CDM             = TRUE,
+    connectionDetails    = connectionDetails,
+    cdmDatabaseSchema    = cdmDatabaseSchema,
+    cohortDatabaseSchema = cohortDatabaseSchema,
+    cohortTable          = cohortTable
+  )
+
+
+  # Pass target/event data frames (cohortId, cohortName). createCohortSettings()
+  # adds cohortType/atlasId/conceptSet internally. Do NOT use
+  # cohortsToCreate_location with the package CohortsToCreate.csv — that CSV is
+  # the OHDSI schema (cohort_name, cohortId, atlasId) and lacks the columns the
+  # loader selects (cohortName, cohortType, conceptSet).
+  cohortSettings <- TreatmentPatterns::createCohortSettings(
+    targetCohorts   = targetCohorts,
+    eventCohorts    = eventCohorts,
+    loadCohorts     = FALSE,
+    generateCohorts = FALSE
+  )
+
+  # createPathwaySettings() takes a list of one-or-more addPathwaySettings() rows
+  pathwaySettings <- TreatmentPatterns::createPathwaySettings(
+    pathwaySettings_list = list(
+      TreatmentPatterns::addPathwaySettings(
+        studyName                  = studyName,
+        targetCohortId             = targetCohortId,
+        eventCohortIds             = validEventIds,
+        minEraDuration             = minEraDuration,
+        eraCollapseSize            = eraCollapseSize,
+        combinationWindow          = combinationWindow,
+        minPostCombinationDuration = minPostCombinationDuration,
+        filterTreatments           = filterTreatments,
+        maxPathLength              = maxPathLength,
+        minCellCount               = minCellCount,
+        minCellMethod              = "Remove",
+        addNoPaths                 = addNoPaths
+      )
+    )
+  )
+
+  saveSettings <- TreatmentPatterns::createSaveSettings(
+    databaseName = databaseName,
+    rootFolder   = tpFolder,
+    outputFolder = file.path(tpFolder, "output"),
+    tempFolder   = file.path(tpFolder, "temp")
+  )
+
+  # The runCreateCohorts step we skip (cohorts already exist) normally
+  #   (a) creates <databaseName>/settings/ and
+  #   (b) writes settings/cohorts_to_create.csv, which pathway construction reads
+  #       (addLabels) to map event cohort IDs to names via cohortType == "event".
+  # Recreate both here. The file MUST be in TreatmentPatterns format:
+  #   cohortId, cohortName, cohortType ("target"/"event"), atlasId, conceptSet.
+  settingsFolder <- file.path(saveSettings$outputFolder, "settings")
+  dir.create(settingsFolder,            recursive = TRUE, showWarnings = FALSE)
+  dir.create(saveSettings$tempFolder,   recursive = TRUE, showWarnings = FALSE)
+
+  cohortsToCreateTp <- rbind(
     data.frame(
       cohortId   = targetCohortId,
       cohortName = .cohortName(targetCohortId),
-      type       = "target",
+      cohortType = "target",
+      atlasId    = NA_integer_,
+      conceptSet = NA_character_,
       stringsAsFactors = FALSE
     ),
     data.frame(
       cohortId   = validEventIds,
       cohortName = vapply(validEventIds, .cohortName, character(1)),
-      type       = "event",
+      cohortType = "event",
+      atlasId    = NA_integer_,
+      conceptSet = NA_character_,
       stringsAsFactors = FALSE
     )
   )
+  utils::write.csv(
+    cohortsToCreateTp,
+    file.path(settingsFolder, "cohorts_to_create.csv"),
+    row.names = FALSE
+  )
+  ParallelLogger::logInfo(
+    "Wrote ", nrow(cohortsToCreateTp), " cohorts to settings/cohorts_to_create.csv"
+  )
+
+  # --------------------------------------------------------------------------
+  # Run — construct pathways and generate output only. NEVER launch Shiny.
+  # --------------------------------------------------------------------------
+  TreatmentPatterns::executeTreatmentPatterns(
+    dataSettings              = dataSettings,
+    cohortSettings            = cohortSettings,
+    pathwaySettings           = pathwaySettings,
+    saveSettings              = saveSettings,
+    runCreateCohorts          = FALSE,
+    runCohortCharacterization = FALSE,
+    runConstructPathways      = TRUE,
+    runGenerateOutput         = TRUE,
+    launchShiny               = FALSE
+  )
 
   ParallelLogger::logInfo(
-    "Treatment patterns [", studyName, "]: target ", .cohortName(targetCohortId),
-    " (", targetCohortId, "); ", length(validEventIds), " event cohorts."
+    "Treatment patterns output written to ", file.path(tpFolder, "output"),
+    ". View with TreatmentPatterns::launchResultsExplorer(outputFolder = \"",
+    file.path(tpFolder, "output"), "\")."
   )
-
-  # --------------------------------------------------------------------------
-  # 1. Construct pathways from the existing cohort table
-  #
-  # computePathways(connectionDetails = ) references the cohort table by BARE
-  # name — dplyr::tbl(con, cohortTableName) — with no schema, so on schema-based
-  # platforms it fails (e.g. Redshift: relation "cohort2" does not exist).
-  # Build the CDMConnector cdm ourselves and register the cohort table WITH its
-  # schema, then pass cdm = (which makes computePathways skip that bare
-  # reference and use ours).
-  # --------------------------------------------------------------------------
-  con <- DatabaseConnector::connect(connectionDetails)
-  on.exit(DatabaseConnector::disconnect(con), add = TRUE)
-
-  cdm <- CDMConnector::cdmFromCon(
-    con         = con,
-    cdmSchema   = cdmDatabaseSchema,
-    writeSchema = cohortDatabaseSchema
-  )
-  cdm[[cohortTable]] <- dplyr::tbl(
-    con,
-    CDMConnector::inSchema(schema = cohortDatabaseSchema, table = cohortTable)
-  )
-
-  andromeda <- TreatmentPatterns::computePathways(
-    cohorts                    = cohorts,
-    cohortTableName            = cohortTable,
-    cdm                        = cdm,
-    analysisId                 = 1,
-    description                = databaseName,
-    minEraDuration             = minEraDuration,
-    eraCollapseSize            = eraCollapseSize,
-    combinationWindow          = combinationWindow,
-    minPostCombinationDuration = minPostCombinationDuration,
-    filterTreatments           = filterTreatments,
-    maxPathLength              = maxPathLength
-  )
-  on.exit(
-    tryCatch(Andromeda::close(andromeda), error = function(e) NULL),
-    add = TRUE
-  )
-
-  # --------------------------------------------------------------------------
-  # 2. Export aggregate results (writes shareable CSV files to csvFolder)
-  # --------------------------------------------------------------------------
-  results <- TreatmentPatterns::export(
-    andromeda    = andromeda,
-    outputPath   = csvFolder,
-    minCellCount = minCellCount,
-    censorType   = "minCellCount",
-    nonePaths    = addNoPaths
-  )
-  ParallelLogger::logInfo("Treatment patterns CSVs written to ", csvFolder)
-
-  # --------------------------------------------------------------------------
-  # 3. Save interactive sunburst + Sankey as standalone HTML (best effort)
-  # --------------------------------------------------------------------------
-  if (requireNamespace("htmlwidgets", quietly = TRUE)) {
-    tryCatch({
-      htmlwidgets::saveWidget(
-        results$plotSunburst(),
-        file.path(tpFolder, "sunburst.html"), selfcontained = TRUE
-      )
-      htmlwidgets::saveWidget(
-        results$plotSankey(),
-        file.path(tpFolder, "sankey.html"), selfcontained = TRUE
-      )
-      ParallelLogger::logInfo("Saved sunburst.html and sankey.html to ", tpFolder)
-    }, error = function(e) {
-      ParallelLogger::logWarn("Could not save pathway plots: ", conditionMessage(e))
-    })
-  } else {
-    ParallelLogger::logInfo(
-      "Install 'htmlwidgets' to save sunburst.html / sankey.html. ",
-      "The returned results object still supports interactive plotting."
-    )
-  }
-
-  ParallelLogger::logInfo(
-    "Treatment patterns complete. Visualise with results$plotSankey() / ",
-    "results$plotSunburst(), or open the saved .html files."
-  )
-  invisible(results)
+  invisible(NULL)
 }
