@@ -125,6 +125,26 @@ if (is.null(cdmSource) || nrow(cdmSource) == 0) {
 DatabaseConnector::disconnect(con)
 
 # ------------------------------------------------------------------------------
+# 1b. Remap subject/person ids to a dense 1..N integer range
+#     MarketScan enrolids exceed the 32-bit integer range (max seen ~3.5e10).
+#     TreatmentPatterns / Andromeda coerce person ids to 32-bit integers, so any
+#     id > 2,147,483,647 overflows to NA and the WHOLE population is silently
+#     dropped (every record removed at the first filter). Pathways are aggregate
+#     over treatments, so subject identity is irrelevant — remap to 1..N.
+# ------------------------------------------------------------------------------
+allSubjects <- sort(unique(c(cohort$subject_id, person$person_id,
+                             observationPeriod$person_id)))
+idMap <- stats::setNames(seq_along(allSubjects), as.character(allSubjects))
+remap <- function(x) unname(idMap[as.character(x)])
+
+cohort$subject_id            <- remap(cohort$subject_id)
+person$person_id             <- remap(person$person_id)
+observationPeriod$person_id  <- remap(observationPeriod$person_id)
+cohort$cohort_definition_id  <- as.integer(cohort$cohort_definition_id)
+message("Remapped ", length(allSubjects), " subjects to a 1..N integer range ",
+        "(max id now ", max(idMap), ").")
+
+# ------------------------------------------------------------------------------
 # 2. Build the DuckDB CDM (clinical tables populated; vocab empty for validation)
 # ------------------------------------------------------------------------------
 if (file.exists(duckFile)) file.remove(duckFile)
