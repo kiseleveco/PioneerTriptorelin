@@ -205,7 +205,6 @@ cdm <- CDMConnector::cdmFromCon(
   cdmName        = databaseName,
   .softValidation = TRUE
 )
-cdm[[cohortTable]] <- dplyr::tbl(duck, cohortTable)
 
 # ------------------------------------------------------------------------------
 # 4. cohorts table for computePathways (type = target / event)
@@ -225,6 +224,22 @@ cohorts <- rbind(
   data.frame(cohortId = eventCohortIds[!is.na(eventCohortIds)],
              cohortName = vapply(eventCohortIds[!is.na(eventCohortIds)], .cohortName, character(1)),
              type = "event", stringsAsFactors = FALSE)
+)
+
+# Register cohort2 as a PROPER omopgenerics cohort table (a plain dplyr::tbl
+# lacks the cohort_set metadata that computePathways needs to build the
+# treatment history — the working example uses generateCohortSet() for this).
+DBI::dbWriteTable(
+  duck, paste0(cohortTable, "_set"),
+  data.frame(cohort_definition_id = cohorts$cohortId,
+             cohort_name          = cohorts$cohortName,
+             stringsAsFactors     = FALSE),
+  overwrite = TRUE
+)
+cdm[[cohortTable]] <- omopgenerics::newCohortTable(
+  table          = dplyr::tbl(duck, cohortTable),
+  cohortSetRef   = dplyr::tbl(duck, paste0(cohortTable, "_set")),
+  .softValidation = TRUE
 )
 
 # ------------------------------------------------------------------------------
