@@ -111,6 +111,19 @@ observationPeriod <- pull(
      FROM @cdm.observation_period WHERE person_id IN (@subq)",
   cdm = cdmDatabaseSchema, subq = subjectSubquery)
 
+# TreatmentPatterns resolves `sex` via an INNER JOIN of cdm$person to cdm$concept
+# on gender_concept_id == concept_id. The concept table therefore MUST contain the
+# gender concepts, or the join drops every cohort record. Extract them.
+message("Extracting gender concepts ...")
+genderConcepts <- pull(
+  "SELECT concept_id, concept_name, domain_id, vocabulary_id, concept_class_id,
+          standard_concept, concept_code, valid_start_date, valid_end_date, invalid_reason
+     FROM @cdm.concept
+    WHERE concept_id IN (SELECT DISTINCT gender_concept_id FROM @cdm.person
+                          WHERE person_id IN (@subq))",
+  cdm = cdmDatabaseSchema, subq = subjectSubquery)
+message("  ", nrow(genderConcepts), " gender concept(s).")
+
 cdmSource <- tryCatch(pull("SELECT * FROM @cdm.cdm_source", cdm = cdmDatabaseSchema),
                       error = function(e) NULL)
 if (is.null(cdmSource) || nrow(cdmSource) == 0) {
@@ -188,6 +201,10 @@ emptyTables <- list(
     valid_end_date = as.Date(character()), invalid_reason = character())
 )
 for (nm in names(emptyTables)) DBI::dbWriteTable(duck, nm, emptyTables[[nm]], overwrite = TRUE)
+
+# concept MUST hold the gender concepts (TP inner-joins it to resolve sex);
+# an empty concept table drops every cohort record.
+DBI::dbWriteTable(duck, "concept", genderConcepts, overwrite = TRUE)
 
 # ------------------------------------------------------------------------------
 # 3. cohort name lookup + cohorts data.frame (cohortId / cohortName / type)
