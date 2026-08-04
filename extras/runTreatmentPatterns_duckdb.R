@@ -236,9 +236,14 @@ DBI::dbWriteTable(
              stringsAsFactors     = FALSE),
   overwrite = TRUE
 )
+# Assign into the cdm first so both tables become omopgenerics cdm_tables
+# (newCohortTable requires a cdm_table, not a raw dplyr::tbl), then wrap the
+# cohort table with its cohort_set metadata.
+cdm[[cohortTable]]                 <- dplyr::tbl(duck, cohortTable)
+cdm[[paste0(cohortTable, "_set")]] <- dplyr::tbl(duck, paste0(cohortTable, "_set"))
 cdm[[cohortTable]] <- omopgenerics::newCohortTable(
-  table          = dplyr::tbl(duck, cohortTable),
-  cohortSetRef   = dplyr::tbl(duck, paste0(cohortTable, "_set")),
+  table          = cdm[[cohortTable]],
+  cohortSetRef   = cdm[[paste0(cohortTable, "_set")]],
   .softValidation = TRUE
 )
 
