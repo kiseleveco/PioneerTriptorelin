@@ -286,6 +286,21 @@ outputEnv <- TreatmentPatterns::computePathways(
   maxPathLength              = maxPathLength
 )
 
+# ------------------------------------------------------------------------------
+# DEBUG: dump the Andromeda intermediate tables to see where records vanish
+# ------------------------------------------------------------------------------
+message("=== Andromeda tables after computePathways ===")
+for (nm in names(outputEnv)) {
+  n <- tryCatch(outputEnv[[nm]] %>% dplyr::tally() %>% dplyr::pull(1),
+                error = function(e) NA)
+  message(sprintf("  %-28s %s rows", nm, n))
+}
+for (nm in names(outputEnv)) {
+  cat("\n--- ", nm, " (head) ---\n")
+  print(tryCatch(outputEnv[[nm]] %>% head(5) %>% dplyr::collect(),
+                 error = function(e) conditionMessage(e)))
+}
+
 results <- TreatmentPatterns::export(
   andromeda    = outputEnv,
   outputPath   = csvFolder,
