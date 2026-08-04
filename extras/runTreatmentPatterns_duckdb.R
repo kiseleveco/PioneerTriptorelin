@@ -1,30 +1,30 @@
 # ==============================================================================
-# PioneerTriptorelin — Treatment Patterns via a local DuckDB (Redshift workaround)
+# PioneerTriptorelin — Treatment Patterns via a local DuckDB
+# Structured after the darwin-eu/TreatmentPatterns vignette
+#   (vignettes/a010_Computing_Pathways.Rmd)
 #
-# TreatmentPatterns 3.1.2 runs through CDMConnector, whose temp-table /
-# materialization layer is unreliable against this Redshift (native #temp throws
-# java.util.NoSuchElementException; emulation lets it start but rows do not
-# survive the temp -> Andromeda round-trip, so every era is dropped at
-# minEraDuration = 0). The data and the SQL date math are correct — only the
-# Redshift plumbing is broken.
+# The vignette always builds the cohort table with CDMConnector::generateCohortSet
+# (a proper omopgenerics cohort table carrying cohort_set + cohort_attrition
+# companions). We already have the cohorts generated upstream in Redshift, so we
+# extract them into DuckDB and RE-CREATE that same structure with
+# omopgenerics::newCohortTable (cohort_set + cohort_attrition), rather than a bare
+# dplyr::tbl() — which TreatmentPatterns cannot build a treatment history from.
 #
-# This script sidesteps Redshift entirely: it pulls the minimal data
-# TreatmentPatterns needs (the target + event cohorts, plus person and
-# observation_period for those subjects) into a LOCAL DuckDB file, builds the
-# cdm from DuckDB (whose temp/date handling is correct), and runs
-# computePathways() + export() there.
+# A DATA sanity check is printed before computePathways: how many target (1751)
+# subjects actually have event-cohort records inside their cohort window. If that
+# is ~0, the empty output is a cohort-design issue, not a code issue.
 #
+# Requires (local):  install.packages(c("duckdb", "DBI", "htmlwidgets"))
 # Individual-level rows are written to a local DuckDB file — confirm this is
-# permitted under your MarketScan data-governance rules before running.
-#
-# Requires (install locally if missing):
-#   install.packages(c("duckdb", "DBI", "htmlwidgets"))
+# permitted under your MarketScan data-governance rules.
 # ==============================================================================
 
+library(dplyr)
+library(DBI)
+library(duckdb)
 library(DatabaseConnector)
 library(CDMConnector)
 library(TreatmentPatterns)
-library(dplyr)
 
 # ------------------------------------------------------------------------------
 # 0. Parameters  (edit to match your site / codeToRun.R)
@@ -33,12 +33,8 @@ source("../credentials.r")   # DBMS, USER, PASSWORD, SERVER, DB_PORT
 
 JDBC <- "/home/a_kiselev/Jdbc"
 connectionDetails <- DatabaseConnector::createConnectionDetails(
-  dbms         = DBMS,
-  user         = USER,
-  password     = PASSWORD,
-  server       = SERVER,
-  port         = DB_PORT,
-  pathToDriver = JDBC
+  dbms = DBMS, user = USER, password = PASSWORD,
+  server = SERVER, port = DB_PORT, pathToDriver = JDBC
 )
 
 cdmDatabaseSchema    <- "marketscan_ccaemdcr_aug2025"
@@ -54,8 +50,8 @@ minCellCount <- 5
 
 outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin"))
 
-# Pathway-construction settings (see runTreatmentPatterns.R for meanings)
-minEraDuration             <- 0
+# Pathway-construction settings (vignette "Full Analysis Example" defaults)
+minEraDuration             <- 7
 eraCollapseSize            <- 30
 combinationWindow          <- 30
 minPostCombinationDuration <- 30
@@ -66,8 +62,9 @@ addNoPaths                 <- FALSE
 # ------------------------------------------------------------------------------
 # Derived
 # ------------------------------------------------------------------------------
-allIds  <- c(targetCohortId, eventCohortIds[!is.na(eventCohortIds)])
-idList  <- paste(allIds, collapse = ", ")
+allIds    <- c(targetCohortId, eventCohortIds[!is.na(eventCohortIds)])
+idList    <- paste(allIds, collapse = ", ")
+evList    <- paste(eventCohortIds[!is.na(eventCohortIds)], collapse = ", ")
 tpFolder  <- file.path(outputFolder, "treatmentPatterns")
 csvFolder <- file.path(tpFolder, "output")
 duckDir   <- file.path(tpFolder, "duckdb")
@@ -77,10 +74,6 @@ dir.create(duckDir,   recursive = TRUE, showWarnings = FALSE)
 
 # ------------------------------------------------------------------------------
 # 1. Extract the minimal data from Redshift
-#    - cohort rows for the 7 cohorts
-#    - person + observation_period for those subjects (via in-DB subquery, so no
-#      giant IN-list is sent from R)
-#    - cdm_source (for the CDM name/version)
 # ------------------------------------------------------------------------------
 con <- DatabaseConnector::connect(connectionDetails)
 
@@ -88,17 +81,16 @@ pull <- function(sql, ...) {
   s  <- SqlRender::render(sql, ...)
   s  <- SqlRender::translate(s, targetDialect = attr(con, "dbms"))
   df <- DatabaseConnector::querySql(con, s)
-  colnames(df) <- tolower(colnames(df))    # OMOP tables use snake_case
+  colnames(df) <- tolower(colnames(df))
   df
 }
 
 message("Extracting cohort rows ...")
 cohort <- pull(
   "SELECT cohort_definition_id, subject_id, cohort_start_date, cohort_end_date
-     FROM @cds.@ct
-    WHERE cohort_definition_id IN (@ids)",
+     FROM @cds.@ct WHERE cohort_definition_id IN (@ids)",
   cds = cohortDatabaseSchema, ct = cohortTable, ids = idList)
-message("  ", nrow(cohort), " cohort records for ",
+message("  ", nrow(cohort), " records / ",
         length(unique(cohort$subject_id)), " subjects.")
 
 subjectSubquery <- sprintf(
@@ -108,47 +100,32 @@ subjectSubquery <- sprintf(
 message("Extracting person ...")
 person <- pull(
   "SELECT person_id, gender_concept_id, year_of_birth, month_of_birth, day_of_birth,
-          birth_datetime, race_concept_id, ethnicity_concept_id
-     FROM @cdm.person
-    WHERE person_id IN (@subq)",
+          race_concept_id, ethnicity_concept_id
+     FROM @cdm.person WHERE person_id IN (@subq)",
   cdm = cdmDatabaseSchema, subq = subjectSubquery)
 
 message("Extracting observation_period ...")
 observationPeriod <- pull(
   "SELECT observation_period_id, person_id, observation_period_start_date,
           observation_period_end_date, period_type_concept_id
-     FROM @cdm.observation_period
-    WHERE person_id IN (@subq)",
+     FROM @cdm.observation_period WHERE person_id IN (@subq)",
   cdm = cdmDatabaseSchema, subq = subjectSubquery)
 
-cdmSource <- tryCatch(
-  pull("SELECT * FROM @cdm.cdm_source", cdm = cdmDatabaseSchema),
-  error = function(e) NULL)
+cdmSource <- tryCatch(pull("SELECT * FROM @cdm.cdm_source", cdm = cdmDatabaseSchema),
+                      error = function(e) NULL)
 if (is.null(cdmSource) || nrow(cdmSource) == 0) {
   cdmSource <- data.frame(
-    cdm_source_name                = databaseName,
-    cdm_source_abbreviation        = databaseId,
-    cdm_holder                     = "NA",
-    source_description             = databaseName,
-    source_documentation_reference = "NA",
-    cdm_etl_reference              = "NA",
-    source_release_date            = as.Date("2025-01-01"),
-    cdm_release_date               = as.Date("2025-01-01"),
-    cdm_version                    = "5.4",
-    cdm_version_concept_id         = 0L,
-    vocabulary_version             = "NA",
-    stringsAsFactors               = FALSE
-  )
+    cdm_source_name = databaseName, cdm_source_abbreviation = databaseId,
+    cdm_holder = "NA", source_description = databaseName,
+    source_documentation_reference = "NA", cdm_etl_reference = "NA",
+    source_release_date = as.Date("2025-01-01"), cdm_release_date = as.Date("2025-01-01"),
+    cdm_version = "5.4", cdm_version_concept_id = 0L, vocabulary_version = "NA",
+    stringsAsFactors = FALSE)
 }
-
 DatabaseConnector::disconnect(con)
 
 # ------------------------------------------------------------------------------
-# 2. Build a local DuckDB CDM
-#    Clinical tables that TreatmentPatterns actually uses (cohort, person,
-#    observation_period, cdm_source) are populated; vocabulary tables are created
-#    EMPTY only to satisfy CDM validation (pathway construction does not read
-#    them).
+# 2. Build the DuckDB CDM (clinical tables populated; vocab empty for validation)
 # ------------------------------------------------------------------------------
 if (file.exists(duckFile)) file.remove(duckFile)
 duck <- DBI::dbConnect(duckdb::duckdb(), dbdir = duckFile)
@@ -159,7 +136,6 @@ DBI::dbWriteTable(duck, "observation_period", observationPeriod, overwrite = TRU
 DBI::dbWriteTable(duck, "cdm_source",         cdmSource,         overwrite = TRUE)
 DBI::dbWriteTable(duck, cohortTable,          cohort,            overwrite = TRUE)
 
-# Empty vocabulary tables (0 rows, correct columns) for CDM validation
 emptyTables <- list(
   concept = data.frame(concept_id = integer(), concept_name = character(),
     domain_id = character(), vocabulary_id = character(), concept_class_id = character(),
@@ -191,72 +167,97 @@ emptyTables <- list(
     box_size = integer(), valid_start_date = as.Date(character()),
     valid_end_date = as.Date(character()), invalid_reason = character())
 )
-for (nm in names(emptyTables)) {
-  DBI::dbWriteTable(duck, nm, emptyTables[[nm]], overwrite = TRUE)
-}
+for (nm in names(emptyTables)) DBI::dbWriteTable(duck, nm, emptyTables[[nm]], overwrite = TRUE)
 
 # ------------------------------------------------------------------------------
-# 3. cdm reference from DuckDB + register the cohort table
-# ------------------------------------------------------------------------------
-cdm <- CDMConnector::cdmFromCon(
-  con            = duck,
-  cdmSchema      = "main",
-  writeSchema    = "main",
-  cdmName        = databaseName,
-  .softValidation = TRUE
-)
-
-# ------------------------------------------------------------------------------
-# 4. cohorts table for computePathways (type = target / event)
+# 3. cohort name lookup + cohorts data.frame (cohortId / cohortName / type)
 # ------------------------------------------------------------------------------
 cohortsToCreate <- readr::read_csv(
   system.file("settings", "CohortsToCreate.csv", package = "PioneerTriptorelin"),
-  col_types = readr::cols()
-)
+  col_types = readr::cols())
 .cohortName <- function(id) {
   nm <- cohortsToCreate$cohort_name[cohortsToCreate$cohortId == id]
   if (length(nm) == 0 || is.na(nm[1])) as.character(id) else nm[1]
 }
 cohorts <- rbind(
-  data.frame(cohortId = targetCohortId,
-             cohortName = .cohortName(targetCohortId),
+  data.frame(cohortId = targetCohortId, cohortName = .cohortName(targetCohortId),
              type = "target", stringsAsFactors = FALSE),
   data.frame(cohortId = eventCohortIds[!is.na(eventCohortIds)],
              cohortName = vapply(eventCohortIds[!is.na(eventCohortIds)], .cohortName, character(1)),
-             type = "event", stringsAsFactors = FALSE)
-)
-
-# Register cohort2 as a PROPER omopgenerics cohort table (a plain dplyr::tbl
-# lacks the cohort_set metadata that computePathways needs to build the
-# treatment history — the working example uses generateCohortSet() for this).
-DBI::dbWriteTable(
-  duck, paste0(cohortTable, "_set"),
-  data.frame(cohort_definition_id = cohorts$cohortId,
-             cohort_name          = cohorts$cohortName,
-             stringsAsFactors     = FALSE),
-  overwrite = TRUE
-)
-# Assign into the cdm first so both tables become omopgenerics cdm_tables
-# (newCohortTable requires a cdm_table, not a raw dplyr::tbl), then wrap the
-# cohort table with its cohort_set metadata.
-cdm[[cohortTable]]                 <- dplyr::tbl(duck, cohortTable)
-cdm[[paste0(cohortTable, "_set")]] <- dplyr::tbl(duck, paste0(cohortTable, "_set"))
-cdm[[cohortTable]] <- omopgenerics::newCohortTable(
-  table          = cdm[[cohortTable]],
-  cohortSetRef   = cdm[[paste0(cohortTable, "_set")]],
-  .softValidation = TRUE
-)
+             type = "event", stringsAsFactors = FALSE))
+print(cohorts)
 
 # ------------------------------------------------------------------------------
-# 5. Construct pathways + export
+# 3b. DATA sanity check — do target (1751) subjects have event records inside
+#     their cohort window? If ~0, empty pathways are a cohort-design issue.
+# ------------------------------------------------------------------------------
+overlap <- DBI::dbGetQuery(duck, sprintf("
+  SELECT e.cohort_definition_id,
+         COUNT(DISTINCT e.subject_id) AS n_event_subjects,
+         COUNT(DISTINCT CASE WHEN t.subject_id IS NOT NULL THEN e.subject_id END) AS n_shared_with_target,
+         COUNT(DISTINCT CASE WHEN t.subject_id IS NOT NULL
+                              AND e.cohort_start_date >= t.cohort_start_date
+                              AND e.cohort_start_date <= t.cohort_end_date
+                             THEN e.subject_id END) AS n_in_target_window
+  FROM %s e
+  LEFT JOIN (SELECT subject_id, cohort_start_date, cohort_end_date
+               FROM %s WHERE cohort_definition_id = %d) t
+    ON e.subject_id = t.subject_id
+  WHERE e.cohort_definition_id IN (%s)
+  GROUP BY e.cohort_definition_id
+  ORDER BY e.cohort_definition_id",
+  cohortTable, cohortTable, targetCohortId, evList))
+message("Event/target overlap (n_in_target_window drives the pathways):")
+print(overlap)
+
+# ------------------------------------------------------------------------------
+# 4. cdm reference + register cohort2 as a full cohort table (set + attrition),
+#    mirroring generateCohortSet() output.
+# ------------------------------------------------------------------------------
+cdm <- CDMConnector::cdmFromCon(
+  con = duck, cdmSchema = "main", writeSchema = "main",
+  cdmName = databaseName, .softValidation = TRUE)
+
+cohortSet <- data.frame(
+  cohort_definition_id = cohorts$cohortId,
+  cohort_name          = cohorts$cohortName,
+  stringsAsFactors     = FALSE)
+
+cohortAttrition <- cohort %>%
+  dplyr::group_by(cohort_definition_id) %>%
+  dplyr::summarise(number_records = dplyr::n(),
+                   number_subjects = dplyr::n_distinct(subject_id), .groups = "drop") %>%
+  dplyr::mutate(reason_id = 1L, reason = "Initial qualifying events",
+                excluded_records = 0L, excluded_subjects = 0L) %>%
+  as.data.frame()
+
+DBI::dbWriteTable(duck, paste0(cohortTable, "_set"),       cohortSet,       overwrite = TRUE)
+DBI::dbWriteTable(duck, paste0(cohortTable, "_attrition"), cohortAttrition, overwrite = TRUE)
+
+# Assign into the cdm first (so each becomes an omopgenerics cdm_table), then wrap
+cdm[[cohortTable]]                       <- dplyr::tbl(duck, cohortTable)
+cdm[[paste0(cohortTable, "_set")]]       <- dplyr::tbl(duck, paste0(cohortTable, "_set"))
+cdm[[paste0(cohortTable, "_attrition")]] <- dplyr::tbl(duck, paste0(cohortTable, "_attrition"))
+cdm[[cohortTable]] <- omopgenerics::newCohortTable(
+  table              = cdm[[cohortTable]],
+  cohortSetRef       = cdm[[paste0(cohortTable, "_set")]],
+  cohortAttritionRef = cdm[[paste0(cohortTable, "_attrition")]],
+  .softValidation    = TRUE)
+
+# ------------------------------------------------------------------------------
+# 5. Compute pathways + export  (vignette structure)
 # ------------------------------------------------------------------------------
 message("Computing pathways on DuckDB ...")
-andromeda <- TreatmentPatterns::computePathways(
+outputEnv <- TreatmentPatterns::computePathways(
   cohorts                    = cohorts,
   cohortTableName            = cohortTable,
   cdm                        = cdm,
   analysisId                 = 1,
   description                = databaseName,
+  startAnchor                = "startDate",
+  windowStart                = 0,
+  endAnchor                  = "endDate",
+  windowEnd                  = 0,
   minEraDuration             = minEraDuration,
   eraCollapseSize            = eraCollapseSize,
   combinationWindow          = combinationWindow,
@@ -266,18 +267,19 @@ andromeda <- TreatmentPatterns::computePathways(
 )
 
 results <- TreatmentPatterns::export(
-  andromeda    = andromeda,
+  andromeda    = outputEnv,
   outputPath   = csvFolder,
   minCellCount = minCellCount,
   censorType   = "minCellCount",
-  nonePaths    = addNoPaths
-)
-message("CSVs written to ", csvFolder)
+  nonePaths    = addNoPaths)
+message("Pathways rows: ", nrow(results$treatment_pathways),
+        "  |  CSVs written to ", csvFolder)
 
 # ------------------------------------------------------------------------------
 # 6. Save interactive sunburst + Sankey as standalone HTML (best effort)
 # ------------------------------------------------------------------------------
-if (requireNamespace("htmlwidgets", quietly = TRUE)) {
+if (requireNamespace("htmlwidgets", quietly = TRUE) &&
+    nrow(results$treatment_pathways) > 0) {
   tryCatch({
     htmlwidgets::saveWidget(results$plotSunburst(),
                             file.path(tpFolder, "sunburst.html"), selfcontained = TRUE)
@@ -287,5 +289,5 @@ if (requireNamespace("htmlwidgets", quietly = TRUE)) {
   }, error = function(e) message("Could not save plots: ", conditionMessage(e)))
 }
 
-try(Andromeda::close(andromeda), silent = TRUE)
-message("Done. Explore interactively: results$plotSankey() / results$plotSunburst()")
+try(Andromeda::close(outputEnv), silent = TRUE)
+message("Done.")
