@@ -54,8 +54,10 @@
 #' @param horizonDays          Horizon (days after the landmark) at which
 #'   cumulative incidence of progression is reported. Default 1095 (3 years).
 #' @param databaseId           Short site identifier used to label outputs.
-#' @param minCellCount         Minimum number of events required to report the
-#'   horizon / summary figures; smaller counts are suppressed. Default 5.
+#' @param minCellCount         Accepted for interface consistency with the other
+#'   analyses (\code{execute} passes it uniformly). \strong{No} cell suppression is
+#'   applied here — suppressing low counts would distort the KM curve, matching the
+#'   safety KM analysis. Default 5.
 #' @param outputFolder         Path where result files will be written.
 #'
 #' @export
@@ -199,22 +201,21 @@ runProgressionAnalysis <- function(connectionDetails,
         error = function(e) NA_real_
       )
 
-      # Suppress the horizon / summary figures on small event counts
-      suppress <- is.na(nEvents) || nEvents < minCellCount
-
+      # No cell suppression — matches the KM safety analysis; suppressing low
+      # counts would distort the curve. All figures reported as computed.
       allSummary[[key]] <- data.frame(
-        target                     = targetName,
-        event                      = eventName,
-        landmarkDays               = landmarkDays,
-        horizonDays                = horizonDays,
-        landmarkN                  = landmarkN,
-        nEvents                    = if (suppress) NA_integer_ else nEvents,
-        cumulative_incidence_horizon = if (suppress) NA_real_ else round(cumIncHorizon, 4),
-        ci_lower_horizon           = if (suppress) NA_real_ else round(ciLowerHorizon, 4),
-        ci_upper_horizon           = if (suppress) NA_real_ else round(ciUpperHorizon, 4),
-        median_days                = if (suppress) NA_real_ else medianProgression,
-        databaseId                 = databaseId,
-        stringsAsFactors           = FALSE
+        target                       = targetName,
+        event                        = eventName,
+        landmarkDays                 = landmarkDays,
+        horizonDays                  = horizonDays,
+        landmarkN                    = landmarkN,
+        nEvents                      = nEvents,
+        cumulative_incidence_horizon = round(cumIncHorizon, 4),
+        ci_lower_horizon             = round(ciLowerHorizon, 4),
+        ci_upper_horizon             = round(ciUpperHorizon, 4),
+        median_days                  = medianProgression,
+        databaseId                   = databaseId,
+        stringsAsFactors             = FALSE
       )
 
       rm(tteData, lmData)
