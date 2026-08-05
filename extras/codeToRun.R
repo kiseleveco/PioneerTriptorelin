@@ -71,21 +71,20 @@ databaseName        <- "MarketScan aug2025"
 databaseDescription <- "MarketScan aug2025"
 
 ## -- Output -------------------------------------------------------------------
-outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin"))
+outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v2"))
 options(andromedaTempFolder = file.path(outputFolder, "andromedaTemp"))
 maxCores <- parallel::detectCores()
 
 # ------------------------------------------------------------------------------
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
-incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
-includeCohortStats         <- FALSE  # TRUE = export inclusion rule statistics to cohortStatistics/
-runCreateCohorts           <- FALSE
-runBaselineCharacteristics <- FALSE
-runUtilisationAnalysis     <- FALSE   # primary: depot formulation + regimen mix
-runSafetyAnalysis          <- FALSE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
+incrementalCohorts         <- FALSE   # TRUE = skip cohorts whose SQL has not changed since last run
+includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
+runCreateCohorts           <- TRUE
+runBaselineCharacteristics <- TRUE
+runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
+runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
-runSwitchingAnalysis       <- FALSE   # KM for switching to alternative ADT
 runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
 
 # ------------------------------------------------------------------------------
@@ -120,10 +119,3 @@ execute(
   runSwitchingAnalysis         = runSwitchingAnalysis,
   runTreatmentPatterns         = runTreatmentPatterns
 )
-
-# ------------------------------------------------------------------------------
-# 4. Visualise treatment patterns (run manually after execute() completes)
-# ------------------------------------------------------------------------------
-# TreatmentPatterns::launchResultsExplorer(
-#   outputFolder = file.path(outputFolder, "treatmentPatterns", "output")
-# )

@@ -21,8 +21,8 @@ library(stringr)
 # ------------------------------------------------------------------------------
 # 0. Paths — adjust outputFolder if running at a different site
 # ------------------------------------------------------------------------------
-outputFolder <- "~/output/MarketScan_triptorelin/plots"
-resultFolder   <- "~/output/MarketScan_triptorelin"
+outputFolder <- "~/output/MarketScan_triptorelin_v2"
+resultFolder   <- "~/output/MarketScan_triptorelin_v2/plots"
 if (!dir.exists(resultFolder)) dir.create(resultFolder, recursive = TRUE)
 
 # ------------------------------------------------------------------------------
