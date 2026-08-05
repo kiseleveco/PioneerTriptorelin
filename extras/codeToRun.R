@@ -62,6 +62,13 @@ withCvCohortId    <- NA_integer_   # triptorelin patients WITH prior CV history
 withoutCvCohortId <- NA_integer_   # triptorelin patients WITHOUT prior CV history
 cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
 
+# Progression analysis (landmark KM) — each target x event pair is a separate endpoint.
+# IDs only — names come from CohortsToCreate.csv. 1693/1694 must be added & generated.
+progressionTargetCohortIds <- c(1751)          # target cohort(s), e.g. triptorelin
+progressionEventCohortIds  <- c(1693, 1694)    # progression event cohorts
+landmarkDays               <- 183              # landmark time (days); editable
+progressionHorizonDays     <- 1095             # report cumulative incidence at this many days AFTER the landmark
+
 minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
 
 ## -- Dataset metadata ---------------------------------------------------------
@@ -87,6 +94,7 @@ runSafetyAnalysis          <- FALSE   # KM for MACE/MI/stroke/AF/VTE/DM/fracture
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
 runSwitchingAnalysis       <- FALSE   # KM for switching to alternative ADT
 runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
+runProgressionAnalysis     <- TRUE    # landmark KM: time to progression event after landmarkDays
 
 # ------------------------------------------------------------------------------
 # 3. Execute
@@ -118,7 +126,12 @@ execute(
   cvOutcomeCohortIds           = cvOutcomeCohortIds,
   runCvComparison              = runCvComparison,
   runSwitchingAnalysis         = runSwitchingAnalysis,
-  runTreatmentPatterns         = runTreatmentPatterns
+  runTreatmentPatterns         = runTreatmentPatterns,
+  progressionTargetCohortIds   = progressionTargetCohortIds,
+  progressionEventCohortIds    = progressionEventCohortIds,
+  landmarkDays                 = landmarkDays,
+  progressionHorizonDays       = progressionHorizonDays,
+  runProgressionAnalysis       = runProgressionAnalysis
 )
 
 # ------------------------------------------------------------------------------

@@ -48,6 +48,17 @@
 #' @param runTreatmentPatterns       Logical. Describe real-world treatment sequences and
 #'   combinations via the TreatmentPatterns package. Never launches Shiny; output is
 #'   written for \code{TreatmentPatterns::launchResultsExplorer}.
+#' @param progressionTargetCohortIds Integer vector of target cohort IDs for the landmark
+#'   progression analysis (each analysed against every progression event cohort).
+#'   \code{NA} entries are silently skipped.
+#' @param progressionEventCohortIds  Integer vector of progression event cohort IDs passed to
+#'   \code{runProgressionAnalysis}, analysed as separate endpoints. Names are resolved from
+#'   \code{inst/settings/CohortsToCreate.csv}.
+#' @param landmarkDays               Landmark time in days for the progression analysis
+#'   (subjects must be event-free and in follow-up at this time). Default 183.
+#' @param progressionHorizonDays     Horizon (days after the landmark) at which cumulative
+#'   incidence of progression is reported. Default 1095 (3 years).
+#' @param runProgressionAnalysis     Logical. Run the landmark progression (KM) analysis.
 #'
 #' @export
 execute <- function(connectionDetails,
@@ -66,6 +77,10 @@ execute <- function(connectionDetails,
                     combinationTreatmentCohortIds,
                     outcomeCohortIds,
                     eventCohortIds,
+                    progressionTargetCohortIds,
+                    progressionEventCohortIds,
+                    landmarkDays                 = 183,
+                    progressionHorizonDays       = 1095,
                     minCellCount                 = 5,
                     withCvCohortId,
                     withoutCvCohortId,
@@ -76,7 +91,8 @@ execute <- function(connectionDetails,
                     runSafetyAnalysis            = TRUE,
                     runCvComparison              = TRUE,
                     runSwitchingAnalysis         = TRUE,
-                    runTreatmentPatterns         = TRUE) {
+                    runTreatmentPatterns         = TRUE,
+                    runProgressionAnalysis       = TRUE) {
 
   if (!dir.exists(outputFolder)) {
     dir.create(outputFolder, recursive = TRUE)
@@ -268,6 +284,29 @@ execute <- function(connectionDetails,
       eventCohortIds       = eventCohortIds,
       databaseId           = databaseId,
       databaseName         = databaseName,
+      minCellCount         = minCellCount,
+      outputFolder         = outputFolder
+    )
+  }
+
+  # ----------------------------------------------------------------------------
+  # Step 8: Progression analysis (landmark KM)
+  #   Time to first progression event after the landmark (default 183 days),
+  #   among subjects event-free & in follow-up at the landmark. Each target x
+  #   event pair is a separate endpoint.
+  # ----------------------------------------------------------------------------
+  if (runProgressionAnalysis) {
+    ParallelLogger::logInfo("Step 8: Running progression analysis (landmark)")
+    runProgressionAnalysis(
+      connectionDetails    = connectionDetails,
+      cdmDatabaseSchema    = cdmDatabaseSchema,
+      cohortDatabaseSchema = cohortDatabaseSchema,
+      cohortTable          = cohortTable,
+      targetCohortIds      = progressionTargetCohortIds,
+      eventCohortIds       = progressionEventCohortIds,
+      landmarkDays         = landmarkDays,
+      horizonDays          = progressionHorizonDays,
+      databaseId           = databaseId,
       minCellCount         = minCellCount,
       outputFolder         = outputFolder
     )
