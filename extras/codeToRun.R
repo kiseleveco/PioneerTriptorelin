@@ -94,6 +94,7 @@ runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
 runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
 runProgressionAnalysis     <- TRUE    # landmark KM: time to progression event after landmarkDays
+runSwitchingAnalysis       <- FALSE
 
 # ------------------------------------------------------------------------------
 # 3. Execute
@@ -131,4 +132,11 @@ execute(
   landmarkDays                 = landmarkDays,
   progressionHorizonDays       = progressionHorizonDays,
   runProgressionAnalysis       = runProgressionAnalysis
+)
+
+
+CohortDiagnostics::createMergedResultsFile(
+  dataFolder = outputFolder,
+  sqliteDbPath = file.path(outputFolder,
+                           "MergedCohortDiagnosticsData.sqlite")
 )
