@@ -64,8 +64,8 @@ cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
 
 # Progression analysis (landmark KM) — each target x event pair is a separate endpoint.
 # IDs only — names come from CohortsToCreate.csv. 1693/1694 must be added & generated.
-progressionTargetCohortIds <- c(1751)          # target cohort(s), e.g. triptorelin
-progressionEventCohortIds  <- c(1693, 1694)    # progression event cohorts
+progressionTargetCohortIds <- c(1751, 1752, 1753, 1754)          # target cohort(s), e.g. triptorelin
+progressionEventCohortIds  <- c(1693, 1694, 1765)    # progression event cohorts
 landmarkDays               <- 183              # landmark time (days); editable
 progressionHorizonDays     <- 1095             # report cumulative incidence at this many days AFTER the landmark
 
@@ -78,7 +78,7 @@ databaseName        <- "MarketScan aug2025"
 databaseDescription <- "MarketScan aug2025"
 
 ## -- Output -------------------------------------------------------------------
-outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v2"))
+outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v.1.1.0"))
 options(andromedaTempFolder = file.path(outputFolder, "andromedaTemp"))
 maxCores <- parallel::detectCores()
 

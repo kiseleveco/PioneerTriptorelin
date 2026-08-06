@@ -20,6 +20,7 @@
 										"Coeff" : -1
 									},
 									"End" : {
+										"Days" : 183,
 										"Coeff" : 1
 									},
 									"UseIndexEnd" : false,
@@ -52,7 +53,7 @@
 												"Coeff" : -1
 											},
 											"End" : {
-												"Days" : 184,
+												"Days" : 183,
 												"Coeff" : 1
 											},
 											"UseIndexEnd" : false,
@@ -79,7 +80,7 @@
 												"Coeff" : -1
 											},
 											"End" : {
-												"Days" : 184,
+												"Days" : 183,
 												"Coeff" : 1
 											},
 											"UseIndexEnd" : false,

@@ -20,7 +20,7 @@
 										"Coeff" : -1
 									},
 									"End" : {
-										"Days" : 184,
+										"Days" : 183,
 										"Coeff" : 1
 									},
 									"UseIndexEnd" : false,
@@ -43,7 +43,7 @@
 									{
 										"Criteria" : {
 											"DrugExposure" : {
-												"CodesetId" : 25,
+												"CodesetId" : 13,
 												"DrugTypeExclude" : false
 											}
 										},
@@ -53,7 +53,7 @@
 												"Coeff" : -1
 											},
 											"End" : {
-												"Days" : 184,
+												"Days" : 183,
 												"Coeff" : 1
 											},
 											"UseIndexEnd" : false,
@@ -80,7 +80,7 @@
 												"Coeff" : -1
 											},
 											"End" : {
-												"Days" : 184,
+												"Days" : 183,
 												"Coeff" : 1
 											},
 											"UseIndexEnd" : false,

@@ -14,3 +14,6 @@ cohort_name,cohortId,atlasId
 [PIONEER_Triptorelin] leuprolide,1761,1761
 [PIONEER_Triptorelin] goserelin,1762,1762
 [PIONEER_Triptorelin] buserelin,1763,1763
+[PIONEER_Triptorelin] ARPI initiation,1694,1694
+[PIONEER_Triptorelin] Chemo initiation,1693,1693
+[PIONEER_Triptorelin] Chemo OR ARPI initiation,1765,1765
