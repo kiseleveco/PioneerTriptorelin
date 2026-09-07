@@ -40,10 +40,10 @@ triptorelinCohortId <- 1751   # cohort definition ID of the main triptorelin coh
 # Combination treatment cohorts for utilisation analysis (fill in once finalised in Atlas)
 # IDs only — cohort names are resolved automatically from CohortsToCreate.csv
 combinationTreatmentCohortIds <- c(
-  1755,   # Triptorelin only
-  1752,     # Triptorelin + ARPI
-  1753,     # Triptorelin + Chemo
-  1754      # Triple
+  1814,   # Triptorelin only
+  1815,     # Triptorelin + ARPI
+  1821,     # Triptorelin + Chemo
+  1820      # Triple
 )
 
 # Adverse event cohorts for incidence rate analysis (fill in once finalised in Atlas)
@@ -64,8 +64,8 @@ cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
 
 # Progression analysis (landmark KM) — each target x event pair is a separate endpoint.
 # IDs only — names come from CohortsToCreate.csv. 1693/1694 must be added & generated.
-progressionTargetCohortIds <- c(1751, 1752, 1753, 1754)          # target cohort(s), e.g. triptorelin
-progressionEventCohortIds  <- c(1693, 1694, 1765)    # progression event cohorts
+progressionTargetCohortIds <- c(1751, 1815, 1821, 1820)          # target cohort(s), e.g. triptorelin
+progressionEventCohortIds  <- c(1817, 1818, 1816)    # progression event cohorts
 landmarkDays               <- 183              # landmark time (days); editable
 progressionHorizonDays     <- 1095             # report cumulative incidence at this many days AFTER the landmark
 
