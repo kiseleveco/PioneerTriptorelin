@@ -26,7 +26,7 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 )
 
 ## -- Schema names -------------------------------------------------------------
-cdmDatabaseSchema        <- "marketscan_ccaemdcr_aug2025"# read-only CDM
+cdmDatabaseSchema        <- "marketscan_ccaemdcr_prod_merged"# read-only CDM
 vocabularyDatabaseSchema <- cdmDatabaseSchema     # usually same as CDM
 cohortDatabaseSchema     <- "marketscan_ccaemdcr_aug2025_results"        # write-enabled; needs read/write/delete
 cohortTable              <- "cohort2"
@@ -73,12 +73,12 @@ minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
 
 ## -- Dataset metadata ---------------------------------------------------------
 # All results are stratified by dataset; never pooled across sites.
-databaseId          <- "MarketScan"           # short identifier, no spaces
-databaseName        <- "MarketScan aug2025"
-databaseDescription <- "MarketScan aug2025"
+databaseId          <- "MarketScan_combined"           # short identifier, no spaces
+databaseName        <- "MarketScan combined"
+databaseDescription <- "MarketScan comdined 2013 - 2025"
 
 ## -- Output -------------------------------------------------------------------
-outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v.1.1.0"))
+outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v.2.0.0"))
 options(andromedaTempFolder = file.path(outputFolder, "andromedaTemp"))
 maxCores <- parallel::detectCores()
 
