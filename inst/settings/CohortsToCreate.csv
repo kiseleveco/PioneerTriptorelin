@@ -1,9 +1,9 @@
 cohort_name,cohortId,atlasId
 [PIONEER_Triptorelin] mPC treated Triptorelin,1751,1751
-[PIONEER_Triptorelin] mPC treated Triptorelin + ARPI,1752,1752
-[PIONEER_Triptorelin] mPC treated Triptorelin + chemo,1753,1753
-[PIONEER_Triptorelin] mPC treated Triptorelin + ARPI + chemo,1754,1754
-[PIONEER_Triptorelin] mPC treated Triptorelin only,1755,1755
+[PIONEER_Triptorelin] mPC treated Triptorelin + ARPI _v2,1815,1815
+[PIONEER_Triptorelin] mPC treated Triptorelin + chemo _v2,1821,1821
+[PIONEER_Triptorelin] mPC treated Triptorelin + ARPI + chemo _v2,1820,1820
+[PIONEER_Triptorelin] mPC treated Triptorelin only _v2,1814,1814
 [PIONEER_Triptorelin] Acute Cardiac Event,1688,1688
 [PIONEER_Triptorelin] Thromboembolism (thromboembolism and pulmonary embolism),1689,1689
 [PIONEER_Triptorelin] Diabetes (DM and Hyperglycemia),1690,1690
@@ -14,6 +14,9 @@ cohort_name,cohortId,atlasId
 [PIONEER_Triptorelin] leuprolide,1761,1761
 [PIONEER_Triptorelin] goserelin,1762,1762
 [PIONEER_Triptorelin] buserelin,1763,1763
-[PIONEER_Triptorelin] ARPI initiation,1694,1694
-[PIONEER_Triptorelin] Chemo initiation,1693,1693
-[PIONEER_Triptorelin] Chemo OR ARPI initiation,1765,1765
+[PIONEER_Triptorelin] ARPI initiation _v2,1817,1817
+[PIONEER_Triptorelin] Chemo initiation _v2,1818,1818
+[PIONEER_Triptorelin] Chemo OR ARPI initiation _v2,1816,1816
+[PIONEER_Triptorelin] Acute myocardial infarction (MI),1824,1824
+[PIONEER_Triptorelin] Stroke (Ischemic and Hemorrhagic),1825,1825
+[PIONEER_Triptorelin] BROAD_Atrial fibrillation,1826,1826

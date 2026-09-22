@@ -26,7 +26,7 @@ connectionDetails <- DatabaseConnector::createConnectionDetails(
 )
 
 ## -- Schema names -------------------------------------------------------------
-cdmDatabaseSchema        <- "marketscan_ccaemdcr_aug2025"# read-only CDM
+cdmDatabaseSchema        <- "marketscan_ccaemdcr_prod_merged"# read-only CDM
 vocabularyDatabaseSchema <- cdmDatabaseSchema     # usually same as CDM
 cohortDatabaseSchema     <- "marketscan_ccaemdcr_aug2025_results"        # write-enabled; needs read/write/delete
 cohortTable              <- "cohort2"
@@ -40,15 +40,15 @@ triptorelinCohortId <- 1751   # cohort definition ID of the main triptorelin coh
 # Combination treatment cohorts for utilisation analysis (fill in once finalised in Atlas)
 # IDs only — cohort names are resolved automatically from CohortsToCreate.csv
 combinationTreatmentCohortIds <- c(
-  1755,   # Triptorelin only
-  1752,     # Triptorelin + ARPI
-  1753,     # Triptorelin + Chemo
-  1754      # Triple
+  1814,   # Triptorelin only
+  1815,     # Triptorelin + ARPI
+  1821,     # Triptorelin + Chemo
+  1820      # Triple
 )
 
 # Adverse event cohorts for incidence rate analysis (fill in once finalised in Atlas)
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
-outcomeCohortIds <- c(1688, 1689, 1690, 1691)
+outcomeCohortIds <- c(1688, 1689, 1690, 1691, 1824, 1825, 1826)
 
 # Treatment event cohorts for the treatment patterns analysis.
 # IDs only — names come from CohortsToCreate.csv. Use the INDIVIDUAL treatment
@@ -64,8 +64,8 @@ cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
 
 # Progression analysis (landmark KM) — each target x event pair is a separate endpoint.
 # IDs only — names come from CohortsToCreate.csv. 1693/1694 must be added & generated.
-progressionTargetCohortIds <- c(1751, 1752, 1753, 1754)          # target cohort(s), e.g. triptorelin
-progressionEventCohortIds  <- c(1693, 1694, 1765)    # progression event cohorts
+progressionTargetCohortIds <- c(1814, 1815, 1821, 1820)          # target cohort(s), e.g. triptorelin add tripto only
+progressionEventCohortIds  <- c(1817, 1818, 1816)    # progression event cohorts
 landmarkDays               <- 183              # landmark time (days); editable
 progressionHorizonDays     <- 1095             # report cumulative incidence at this many days AFTER the landmark
 
@@ -73,26 +73,26 @@ minCellCount      <- 5    # suppress KM rows / cells with fewer events than this
 
 ## -- Dataset metadata ---------------------------------------------------------
 # All results are stratified by dataset; never pooled across sites.
-databaseId          <- "MarketScan"           # short identifier, no spaces
-databaseName        <- "MarketScan aug2025"
-databaseDescription <- "MarketScan aug2025"
+databaseId          <- "MarketScan_combined"           # short identifier, no spaces
+databaseName        <- "MarketScan combined"
+databaseDescription <- "MarketScan comdined 2013 - 2025"
 
 ## -- Output -------------------------------------------------------------------
-outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v.1.1.0"))
+outputFolder <- file.path("/home/a_kiselev/output", paste0(databaseId, "_triptorelin_v.2.0.0"))
 options(andromedaTempFolder = file.path(outputFolder, "andromedaTemp"))
 maxCores <- parallel::detectCores()
 
 # ------------------------------------------------------------------------------
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
-incrementalCohorts         <- FALSE   # TRUE = skip cohorts whose SQL has not changed since last run
+incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
 includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
 runCreateCohorts           <- TRUE
-runBaselineCharacteristics <- TRUE
+runBaselineCharacteristics <- FALSE
 runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
 runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
-runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
+runTreatmentPatterns       <- FALSE    # treatment sequences/combinations (TreatmentPatterns)
 runProgressionAnalysis     <- TRUE    # landmark KM: time to progression event after landmarkDays
 runSwitchingAnalysis       <- FALSE
 
@@ -138,5 +138,6 @@ execute(
 CohortDiagnostics::createMergedResultsFile(
   dataFolder = outputFolder,
   sqliteDbPath = file.path(outputFolder,
-                           "MergedCohortDiagnosticsData.sqlite")
+                           "MergedCohortDiagnosticsData.sqlite",
+                           overwrite = TRUE)
 )
