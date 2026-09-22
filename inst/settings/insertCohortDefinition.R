@@ -1,6 +1,6 @@
 library(ROhdsiWebApi)
 base.url <- "https://pioneer.hzdr.de/WebAPI"
-token <- "Bearer "
+token <- "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhbmRyZWkua2lzZWxldkBiZG1jb25zdWx0aW5nLmZyIiwiU2Vzc2lvbi1JRCI6bnVsbCwiZXhwIjoxNzkwMDI1ODIyfQ.KypB2EW_fQf7-ZFq_CqdEnBVDmHAKUs5YR2GEENYACVHgyVTC1N9pQjQ-MFh21LrJL270bbenANn55fNR9RZFg"
 
 ROhdsiWebApi::setAuthHeader(base.url, token)
 ROhdsiWebApi::insertCohortDefinitionSetInPackage(fileName = "inst/settings/CohortsToCreate.csv",

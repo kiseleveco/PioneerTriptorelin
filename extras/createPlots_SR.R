@@ -21,8 +21,8 @@ library(stringr)
 # ------------------------------------------------------------------------------
 # 0. Paths — adjust outputFolder if running at a different site
 # ------------------------------------------------------------------------------
-outputFolder <- "~/output/MarketScan_triptorelin_v.1.1.0" #output of data analysis script
-resultFolder   <- "~/output/MarketScan_triptorelin_v.1.1.0/plots" #output of plots
+outputFolder <- "~/output/MarketScan_combined_triptorelin_v.2.0.0" #output of data analysis script
+resultFolder   <- "~/output/MarketScan_combined_triptorelin_v.2.0.0/plots" #output of plots
 if (!dir.exists(resultFolder)) dir.create(resultFolder, recursive = TRUE)
 
 # ------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ if (file.exists(combFile)) {
 # ==============================================================================
 # 2. Adverse event incidence rates (forest-style plot)
 # ==============================================================================
-irFile <- file.path(outputFolder, "utilisationAnalysis", "incidenceRates.csv")
+irFile <- file.path(outputFolder, "safetyAnalysis", "incidenceRates.csv")
 
 if (file.exists(irFile)) {
   ir <- read_csv(irFile, col_types = cols(), show_col_types = FALSE)

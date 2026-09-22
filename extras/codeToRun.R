@@ -48,7 +48,7 @@ combinationTreatmentCohortIds <- c(
 
 # Adverse event cohorts for incidence rate analysis (fill in once finalised in Atlas)
 # IDs only — names come from CohortsToCreate.csv; episodic/chronic from IRsettings.csv
-outcomeCohortIds <- c(1688, 1689, 1690, 1691)
+outcomeCohortIds <- c(1688, 1689, 1690, 1691, 1824, 1825, 1826)
 
 # Treatment event cohorts for the treatment patterns analysis.
 # IDs only — names come from CohortsToCreate.csv. Use the INDIVIDUAL treatment
@@ -64,7 +64,7 @@ cvOutcomeCohortIds <- integer(0)   # CV outcome cohort IDs (e.g. c(XXXX, XXXX))
 
 # Progression analysis (landmark KM) — each target x event pair is a separate endpoint.
 # IDs only — names come from CohortsToCreate.csv. 1693/1694 must be added & generated.
-progressionTargetCohortIds <- c(1751, 1815, 1821, 1820)          # target cohort(s), e.g. triptorelin
+progressionTargetCohortIds <- c(1814, 1815, 1821, 1820)          # target cohort(s), e.g. triptorelin add tripto only
 progressionEventCohortIds  <- c(1817, 1818, 1816)    # progression event cohorts
 landmarkDays               <- 183              # landmark time (days); editable
 progressionHorizonDays     <- 1095             # report cumulative incidence at this many days AFTER the landmark
@@ -85,14 +85,14 @@ maxCores <- parallel::detectCores()
 # ------------------------------------------------------------------------------
 # 2. Pipeline control  (set FALSE to skip a step)
 # ------------------------------------------------------------------------------
-incrementalCohorts         <- FALSE   # TRUE = skip cohorts whose SQL has not changed since last run
+incrementalCohorts         <- TRUE   # TRUE = skip cohorts whose SQL has not changed since last run
 includeCohortStats         <- TRUE  # TRUE = export inclusion rule statistics to cohortStatistics/
 runCreateCohorts           <- TRUE
-runBaselineCharacteristics <- TRUE
+runBaselineCharacteristics <- FALSE
 runUtilisationAnalysis     <- TRUE   # primary: depot formulation + regimen mix
 runSafetyAnalysis          <- TRUE   # KM for MACE/MI/stroke/AF/VTE/DM/fractures (3-year probability)
 runCvComparison            <- FALSE   # PS-matched Cox PH: with vs without prior CV history
-runTreatmentPatterns       <- TRUE    # treatment sequences/combinations (TreatmentPatterns)
+runTreatmentPatterns       <- FALSE    # treatment sequences/combinations (TreatmentPatterns)
 runProgressionAnalysis     <- TRUE    # landmark KM: time to progression event after landmarkDays
 runSwitchingAnalysis       <- FALSE
 
@@ -138,5 +138,6 @@ execute(
 CohortDiagnostics::createMergedResultsFile(
   dataFolder = outputFolder,
   sqliteDbPath = file.path(outputFolder,
-                           "MergedCohortDiagnosticsData.sqlite")
+                           "MergedCohortDiagnosticsData.sqlite",
+                           overwrite = TRUE)
 )

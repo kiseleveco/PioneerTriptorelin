@@ -17,3 +17,6 @@ cohort_name,cohortId,atlasId
 [PIONEER_Triptorelin] ARPI initiation _v2,1817,1817
 [PIONEER_Triptorelin] Chemo initiation _v2,1818,1818
 [PIONEER_Triptorelin] Chemo OR ARPI initiation _v2,1816,1816
+[PIONEER_Triptorelin] Acute myocardial infarction (MI),1824,1824
+[PIONEER_Triptorelin] Stroke (Ischemic and Hemorrhagic),1825,1825
+[PIONEER_Triptorelin] BROAD_Atrial fibrillation,1826,1826
