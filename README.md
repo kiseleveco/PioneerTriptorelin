@@ -46,7 +46,7 @@ Credentials should be stored in a separate file (e.g. `../credentials.r`) and so
 
 ## Cohort ID Reference
 
-All cohort IDs must be filled in `extras/codeToRun.R` before running the relevant step.
+All cohort IDs must be filled in `extras/codeToRun.R` before running the relevant step. The cohort IDs are prefilled by the developer, the federated site is not required to make any modifications unless it's stated separately
 
 | Parameter | Description |
 |---|---|
@@ -79,8 +79,6 @@ Instantiates all study cohorts in `cohortDatabaseSchema.cohortTable` using the S
 **Outputs** (in `outputFolder/`)
 - `cohortCounts.csv` — row counts per cohort
 
-**Share with coordinator:** `cohortCounts.csv`
-
 ---
 
 ### Step 2 — Cohort Diagnostics (`runCohortDiagnostics`)
@@ -94,8 +92,6 @@ Runs `CohortDiagnostics::executeDiagnostics()` to evaluate cohort validity: incl
 
 **Outputs** (in `outputFolder/`)
 - A zip file per site compatible with `CohortDiagnostics::launchDiagnosticsExplorer()`
-
-**Share with coordinator:** the zip file
 
 **Viewing results**
 ```r
@@ -125,8 +121,6 @@ Runs temporal cohort characterisation via `CohortDiagnostics::executeDiagnostics
 **Outputs** (in `outputFolder/baselineCharacteristics/`)
 - Zip file compatible with `CohortDiagnostics::launchDiagnosticsExplorer()`
 
-**Share with coordinator:** the zip file
-
 ---
 
 ### Step 4 — Utilisation Analysis (`runUtilisationAnalysis`)
@@ -136,7 +130,6 @@ Describes real-world triptorelin use at the index date:
 - Depot formulation and dosing interval (1-month/3.75 mg, 3-month/11.25 mg, 6-month/22.5 mg)
 - Combination regimen (ADT alone, ADT + ARPI, ADT + chemotherapy, ADT + chemotherapy + ARPI)
 
-*Not yet implemented.*
 
 ---
 
@@ -162,42 +155,8 @@ Estimates the 3-year cumulative incidence of seven safety outcomes using Kaplan-
 - `km3YearEstimates.csv` — 3-year cumulative incidence point estimate and 95% CI per outcome
 - `coxResults.csv` — *(placeholder; Cox modelling is handled in Step 6)*
 
-**Share with coordinator:** all files in `safetyAnalysis/`
-
 ---
 
-### Step 6 — CV Comparison: With vs Without Prior CV History (`runCvComparison`)
-
-**What it does**
-Compares the risk of CV outcomes between triptorelin patients with prior cardiovascular disease history (target) and those without (comparator), using `CohortMethod::runCmAnalyses()`:
-
-1. **Propensity score model** — large-scale regularised logistic regression (`Cyclops`) on default covariates to balance the two groups
-2. **1:1 PS matching** — caliper 0.2 on the standardised logit scale
-3. **Stratified Cox PH** — fitted in the matched population, conditioned on matched pairs
-
-Outcomes: MACE, MI, stroke, AF.
-
-> **Important:** Intermediate objects produced by `runCmAnalyses()` (CmData, PS models, matched populations) are written to `outputFolder/cvComparison/cm/` and contain individual-level data. This folder must remain at the site and must **not** be shared.
-
-**Requires**
-- Step 1 completed
-- `withCvCohortId`, `withoutCvCohortId`, and `cvOutcomeCohortIds` set in `codeToRun.R`
-
-**Outputs**
-
-*Site-only (individual-level — do not share):*
-- `outputFolder/cvComparison/cm/` — intermediate CohortMethod objects
-
-*For sharing (aggregated):*
-- `outputFolder/cvComparison/export/cm_result.csv` — HR, 95% CI, p-value per outcome
-- `outputFolder/cvComparison/export/cm_kaplan_meier_dist.csv` — KM curves in matched population (for plotting)
-- `outputFolder/cvComparison/export/cm_attrition.csv` — patient counts at each step
-- `outputFolder/cvComparison/export/cm_ps_dist.csv` — binned PS distributions
-- `outputFolder/cvComparison/export/cm_covariate_balance.csv` — standardised mean differences before/after matching (for love plots)
-- `outputFolder/cvComparison/export/cm_diagnostics_summary.csv` — balance and equipoise diagnostics
-- Additional standard CohortMethod export files
-
-**Share with coordinator:** all files in `outputFolder/cvComparison/export/`
 
 **Viewing results**
 Results are compatible with `OhdsiShinyModules::cohortMethodModule()`. To view locally:
@@ -221,6 +180,8 @@ Alternative agents: Relugolix, Degarelix, Leuprolide, Goserelin, Buserelin, surg
 
 ## Output Sharing Summary
 
+None of the files in the output folder contain personal-level information and can be shared with the central server.
+
 | Folder / File | Share with coordinator |
 |---|---|
 | `cohortCounts.csv` | Yes |
@@ -228,7 +189,6 @@ Alternative agents: Relugolix, Degarelix, Leuprolide, Goserelin, Buserelin, surg
 | `baselineCharacteristics/*.zip` | Yes |
 | `safetyAnalysis/` | Yes |
 | `cvComparison/export/` | Yes |
-| `cvComparison/cm/` | **No — individual-level data, site-only** |
 
 ---
 
